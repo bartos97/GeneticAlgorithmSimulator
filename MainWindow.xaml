@@ -4,17 +4,215 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GeneticAlgorithmSimulator"
+        xmlns:rules="clr-namespace:GeneticAlgorithmSimulator.ValidationRules"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Genetic algorithm simulator" Height="450" Width="800">
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        Title="Genetic algorithm simulator" 
+        Height="750" Width="450">
+    <Window.Resources>
+        <local:Settings x:Key="settings"/>
+        <ObjectDataProvider x:Key="SelectionMethodEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:SelectionMethod"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="CrossingMethodEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:CrossingMethod"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="MutationMethodEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:MutationMethod"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="OptimizationMethodEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:OptimizationMethod"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    
+    <Window.DataContext>
+        <Binding Source="{StaticResource settings}"/>
+    </Window.DataContext>
 
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16">
+            <Label Content="Function domain range start and end (in all dimensions)" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBox VerticalAlignment="Top" Grid.Column="0" Margin="0,0,4,0" 
+                         x:Name="TextBoxRangeStart" Text="{Binding Path=RangeStart, Mode=TwoWay}"
+                         PreviewTextInput="OnlyNumberInput"/>
+                <TextBox VerticalAlignment="Top" Grid.Column="1" Margin="4,0,0,0"
+                         x:Name="TextBoxRangeEnd" Text="{Binding Path=RangeEnd, Mode=TwoWay}"
+                         PreviewTextInput="OnlyNumberInput"/>
+            </Grid>
+
+            <Label Content="Number of bits in chromosome" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <TextBox VerticalAlignment="Top" 
+                     x:Name="TextBoxNumOfBits"
+                     PreviewTextInput="OnlyPositiveIntegerInput">
+                <TextBox.Text>
+                    <Binding Path="NumOfBits" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
+                        <Binding.ValidationRules>
+                            <rules:NumberRangeRule Min="0"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <Label Content="Population size" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <TextBox VerticalAlignment="Top" 
+                     x:Name="TextBoxPopulationSize"
+                     PreviewTextInput="OnlyPositiveIntegerInput">
+                <TextBox.Text>
+                    <Binding Path="PopulationSize" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
+                        <Binding.ValidationRules>
+                            <rules:NumberRangeRule Min="0"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <Label Content="Epochs amount" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <TextBox VerticalAlignment="Top" 
+                     x:Name="TextBoxEpochsAmount"
+                     PreviewTextInput="OnlyPositiveIntegerInput">
+                <TextBox.Text>
+                    <Binding Path="EpochsAmount" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
+                        <Binding.ValidationRules>
+                            <rules:NumberRangeRule Min="0"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <Label Content="Percentage of individuals to cross (in best selection method)" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <TextBox VerticalAlignment="Top" 
+                     x:Name="TextBoxPercentageToCross"
+                     PreviewTextInput="OnlyPositiveIntegerInput"
+                     IsEnabled="False">
+                <TextBox.Text>
+                    <Binding Path="PercentageToCross" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
+                        <Binding.ValidationRules>
+                            <rules:NumberRangeRule Min="0" Max="100"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <Label Content="Tournaments amount (in tournament selection method)" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <TextBox VerticalAlignment="Top" 
+                     x:Name="TextBoxTournamentsAmount"
+                     PreviewTextInput="OnlyPositiveIntegerInput"
+                     IsEnabled="False">
+                <TextBox.Text>
+                    <Binding Path="TournamentsAmount" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
+                        <Binding.ValidationRules>
+                            <rules:NumberRangeRule Min="0"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <Label Content="Percentage of individuals to keep in Elite Strategy" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <TextBox VerticalAlignment="Top" 
+                     x:Name="TextBoxPercentageInElite"
+                     PreviewTextInput="OnlyPositiveIntegerInput">
+                <TextBox.Text>
+                    <Binding Path="PercentageInElite" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
+                        <Binding.ValidationRules>
+                            <rules:NumberRangeRule Min="0" Max="100"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <Label Content="Crossing probability (as percentage)" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <TextBox VerticalAlignment="Top" 
+                     x:Name="TextBoxCrossingProbab"
+                     PreviewTextInput="OnlyPositiveIntegerInput">
+                <TextBox.Text>
+                    <Binding Path="CrossingProbabPerc" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
+                        <Binding.ValidationRules>
+                            <rules:NumberRangeRule Min="0" Max="100"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <Label Content="Mutation probability (as percentage)" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <TextBox VerticalAlignment="Top" 
+                     x:Name="TextBoxMutationProbab"
+                     PreviewTextInput="OnlyPositiveIntegerInput">
+                <TextBox.Text>
+                    <Binding Path="MutationProbabPerc" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
+                        <Binding.ValidationRules>
+                            <rules:NumberRangeRule Min="0" Max="100"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <Label Content="Inversion probability (as percentage)" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <TextBox VerticalAlignment="Top" 
+                     x:Name="TextBoxInversionProbab"
+                     PreviewTextInput="OnlyPositiveIntegerInput">
+                <TextBox.Text>
+                    <Binding Path="InversionProbabPerc" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
+                        <Binding.ValidationRules>
+                            <rules:NumberRangeRule Min="0" Max="100"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+
+            <Label Content="Selection method" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <ComboBox VerticalAlignment="Top" 
+                      x:Name="ComboBoxSelectionMethod"
+                      ItemsSource="{Binding Source={StaticResource SelectionMethodEnum}}"
+                      SelectedItem="{Binding Path=SelectionMethod, Mode=TwoWay}"
+                      SelectionChanged="ComboBoxSelectionMethod_SelectionChanged"/>
+
+            <Label Content="Crossing method" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <ComboBox VerticalAlignment="Top" 
+                      x:Name="ComboBoxCrossingMethod"
+                      ItemsSource="{Binding Source={StaticResource CrossingMethodEnum}}"
+                      SelectedItem="{Binding Path=CrossingMethod, Mode=TwoWay}"/>
+
+            <Label Content="Mutation method" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <ComboBox VerticalAlignment="Top" 
+                      x:Name="ComboBoxMutationMethod"
+                      ItemsSource="{Binding Source={StaticResource MutationMethodEnum}}"
+                      SelectedItem="{Binding Path=MutationMethod, Mode=TwoWay}"/>
+
+            <Label Content="Optimization method" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <ComboBox VerticalAlignment="Top"
+                      x:Name="ComboBoxOptimizationMethod"
+                      ItemsSource="{Binding Source={StaticResource OptimizationMethodEnum}}"
+                      SelectedItem="{Binding Path=OptimizationMethod, Mode=TwoWay}"/>
+
+            <Button Margin="0, 16, 0, 0" Padding="16, 2" VerticalAlignment="Bottom"  Content="Start"
+                    x:Name="ButtonStart" Click="ButtonStart_Click"></Button>
+        </StackPanel>
+    </ScrollViewer>
 </Window>
