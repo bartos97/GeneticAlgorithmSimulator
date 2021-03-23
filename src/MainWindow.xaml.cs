@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeneticAlgorithmSimulator.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,25 +17,23 @@ using System.Windows.Shapes;
 
 namespace GeneticAlgorithmSimulator
 {
-    public enum RegexType
-    {
-        NUMBER, INTEGER, POSITIVE_INTEGER
-    };
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly Dictionary<RegexType, Regex> regexes = new()
+        private static readonly Dictionary<TestFunction, Func<double, double, double>> testFunctionsImpl = new()
         {
-            { RegexType.NUMBER, new Regex("[^0-9.-]+") },
-            { RegexType.INTEGER, new Regex("[^0-9-]+") },
-            { RegexType.POSITIVE_INTEGER, new Regex("[^0-9]+") }
+            { 
+                TestFunction.SCHWEFEL, 
+                (double x1, double x2) 
+                    => 837.9658 - ( x1 * Math.Sin(Math.Sqrt(Math.Abs(x1))) + x2 * Math.Sin(Math.Sqrt(Math.Abs(x2))) )
+            }
         };
 
         private Settings settings = new()
         {
+            TestFunction = TestFunction.SCHWEFEL,
             RangeStart = 0,
             RangeEnd = 10,
             NumOfBits = 40,
@@ -87,17 +86,17 @@ namespace GeneticAlgorithmSimulator
 
         private void OnlyNumberInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = regexes[RegexType.NUMBER].IsMatch(e.Text);
+            e.Handled = Regexes.number.IsMatch(e.Text);
         }
 
         private void OnlyIntegerInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = regexes[RegexType.INTEGER].IsMatch(e.Text);
+            e.Handled = Regexes.integer.IsMatch(e.Text);
         }
 
         private void OnlyPositiveIntegerInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = regexes[RegexType.POSITIVE_INTEGER].IsMatch(e.Text);
+            e.Handled = Regexes.positiveInteger.IsMatch(e.Text);
         }
     }
 }

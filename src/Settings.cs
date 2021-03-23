@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace GeneticAlgorithmSimulator
 {
+    public enum TestFunction
+    {
+        SCHWEFEL
+    }
+
     public enum SelectionMethod
     {
         BEST, ROULETTE, TOURNAMENT
@@ -28,6 +33,7 @@ namespace GeneticAlgorithmSimulator
 
     public class Settings
     {
+        public TestFunction TestFunction { get; set; }
         public double RangeStart { get; set; }
         public double RangeEnd { get; set; }
         public int NumOfBits { get; set; }

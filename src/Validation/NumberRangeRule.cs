@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace GeneticAlgorithmSimulator.ValidationRules
+namespace GeneticAlgorithmSimulator.Validation
 {
     public class NumberRangeRule : ValidationRule
     {
-        public int Min { get; set; } = Int32.MinValue;
-        public int Max { get; set; } = Int32.MaxValue;
+        public int Min { get; set; } = int.MinValue;
+        public int Max { get; set; } = int.MaxValue;
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {

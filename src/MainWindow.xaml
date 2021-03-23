@@ -4,13 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GeneticAlgorithmSimulator"
-        xmlns:rules="clr-namespace:GeneticAlgorithmSimulator.ValidationRules"
+        xmlns:validation="clr-namespace:GeneticAlgorithmSimulator.Validation"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Genetic algorithm simulator" 
-        Height="750" Width="450">
+        Height="800" Width="450">
     <Window.Resources>
         <local:Settings x:Key="settings"/>
+        <ObjectDataProvider x:Key="TestFunctionEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="local:TestFunction"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
         <ObjectDataProvider x:Key="SelectionMethodEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="local:SelectionMethod"/>
@@ -39,6 +44,13 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="16">
+            <Label Content="Test function" 
+                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <ComboBox VerticalAlignment="Top" 
+                      x:Name="ComboBoxTestFunction"
+                      ItemsSource="{Binding Source={StaticResource TestFunctionEnum}}"
+                      SelectedItem="{Binding Path=TestFunction, Mode=TwoWay}"/>
+            
             <Label Content="Function domain range start and end (in all dimensions)" 
                    HorizontalAlignment="Left" VerticalAlignment="Top" />
             <Grid>
@@ -62,7 +74,7 @@
                 <TextBox.Text>
                     <Binding Path="NumOfBits" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
                         <Binding.ValidationRules>
-                            <rules:NumberRangeRule Min="0"/>
+                            <validation:NumberRangeRule Min="0"/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -76,7 +88,7 @@
                 <TextBox.Text>
                     <Binding Path="PopulationSize" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
                         <Binding.ValidationRules>
-                            <rules:NumberRangeRule Min="0"/>
+                            <validation:NumberRangeRule Min="0"/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -90,7 +102,7 @@
                 <TextBox.Text>
                     <Binding Path="EpochsAmount" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
                         <Binding.ValidationRules>
-                            <rules:NumberRangeRule Min="0"/>
+                            <validation:NumberRangeRule Min="0"/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -105,7 +117,7 @@
                 <TextBox.Text>
                     <Binding Path="PercentageToCross" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
                         <Binding.ValidationRules>
-                            <rules:NumberRangeRule Min="0" Max="100"/>
+                            <validation:NumberRangeRule Min="0" Max="100"/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -120,7 +132,7 @@
                 <TextBox.Text>
                     <Binding Path="TournamentsAmount" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
                         <Binding.ValidationRules>
-                            <rules:NumberRangeRule Min="0"/>
+                            <validation:NumberRangeRule Min="0"/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -134,7 +146,7 @@
                 <TextBox.Text>
                     <Binding Path="PercentageInElite" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
                         <Binding.ValidationRules>
-                            <rules:NumberRangeRule Min="0" Max="100"/>
+                            <validation:NumberRangeRule Min="0" Max="100"/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -148,7 +160,7 @@
                 <TextBox.Text>
                     <Binding Path="CrossingProbabPerc" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
                         <Binding.ValidationRules>
-                            <rules:NumberRangeRule Min="0" Max="100"/>
+                            <validation:NumberRangeRule Min="0" Max="100"/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -162,7 +174,7 @@
                 <TextBox.Text>
                     <Binding Path="MutationProbabPerc" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
                         <Binding.ValidationRules>
-                            <rules:NumberRangeRule Min="0" Max="100"/>
+                            <validation:NumberRangeRule Min="0" Max="100"/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
@@ -176,7 +188,7 @@
                 <TextBox.Text>
                     <Binding Path="InversionProbabPerc" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay" >
                         <Binding.ValidationRules>
-                            <rules:NumberRangeRule Min="0" Max="100"/>
+                            <validation:NumberRangeRule Min="0" Max="100"/>
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
