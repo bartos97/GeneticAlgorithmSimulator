@@ -6,60 +6,54 @@
         xmlns:local="clr-namespace:GeneticAlgorithmSimulator"
         xmlns:validation="clr-namespace:GeneticAlgorithmSimulator.Validation"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:oxy="http://oxyplot.org/wpf" mc:Ignorable="d" Height="700"
-        Width="1200" MinWidth="600" MinHeight="400"
-        Title="Genetic algorithm simulator">
+        xmlns:oxy="http://oxyplot.org/wpf" mc:Ignorable="d" Width="1200"
+        Height="700" MinWidth="1200" MinHeight="400"
+        Title="Genetic algorithm simulator" Loaded="Window_Loaded">
     <Window.Resources>
-        <local:Settings x:Key="settings" />
+        <local:GeneticAlgorithmSettings x:Key="GeneticAlgorithmSettings" />
         <ObjectDataProvider x:Key="TestFunctionEnum" MethodName="GetValues"
                 ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:TestFunction" />
+                <x:Type TypeName="local:TestFunctionEnum" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="SelectionMethodEnum" MethodName="GetValues"
                 ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:SelectionMethod" />
+                <x:Type TypeName="local:SelectionMethodEnum" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="CrossingMethodEnum" MethodName="GetValues"
                 ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:CrossingMethod" />
+                <x:Type TypeName="local:CrossingMethodEnum" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="MutationMethodEnum" MethodName="GetValues"
                 ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:MutationMethod" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <ObjectDataProvider x:Key="OptimizationMethodEnum"
-                MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:OptimizationMethod" />
+                <x:Type TypeName="local:MutationMethodEnum" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
 
-    <Window.DataContext>
-        <Binding Source="{StaticResource settings}" />
-    </Window.DataContext>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition MaxHeight="50" />
+            <RowDefinition MaxHeight="70" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" MaxWidth="300" MinWidth="200" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
 
+        <!--Settings-->        
         <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="8">
-                <Label Padding="0, 6">
+            <StackPanel Margin="8" x:Name="StackPanelSettings">
+                <StackPanel.DataContext>
+                    <Binding Source="{StaticResource GeneticAlgorithmSettings}" />
+                </StackPanel.DataContext>
+                <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
                         Test function
                     </TextBlock>
@@ -68,7 +62,7 @@
                         ItemsSource="{Binding Source={StaticResource TestFunctionEnum}}"
                         SelectedItem="{Binding Path=TestFunction, Mode=TwoWay}" />
 
-                <Label Padding="0, 6">
+                <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
                         Function domain range start and end (in all dimensions)
                     </TextBlock>
@@ -88,7 +82,7 @@
                             PreviewTextInput="OnlyNumberInput" />
                 </Grid>
 
-                <Label Padding="0, 6">
+                <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
                         Number of bits in chromosome
                     </TextBlock>
@@ -106,7 +100,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <Label Padding="0, 6">
+                <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
                         Population size
                     </TextBlock>
@@ -124,7 +118,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <Label Padding="0, 6">
+                <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
                         Epochs amount
                     </TextBlock>
@@ -142,7 +136,56 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <Label Padding="0, 6">
+                <Label>
+                    <TextBlock TextWrapping="WrapWithOverflow">
+                        Percentage of individuals to keep in Elite Strategy
+                    </TextBlock>
+                </Label>
+                <TextBox VerticalAlignment="Top"
+                        x:Name="TextBoxPercentageInElite"
+                        PreviewTextInput="OnlyPositiveIntegerInput">
+                    <TextBox.Text>
+                        <Binding Path="PercentageInElite"
+                                UpdateSourceTrigger="PropertyChanged"
+                                Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <validation:NumberRangeRule Min="0" Max="100" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <Label>
+                    <TextBlock TextWrapping="WrapWithOverflow">
+                        Inversion probability (as percentage)
+                    </TextBlock>
+                </Label>
+                <TextBox VerticalAlignment="Top" x:Name="TextBoxInversionProbab"
+                        PreviewTextInput="OnlyPositiveIntegerInput">
+                    <TextBox.Text>
+                        <Binding Path="InversionProbabPerc"
+                                UpdateSourceTrigger="PropertyChanged"
+                                Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <validation:NumberRangeRule Min="0" Max="100" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+
+                <Label>
+                    <TextBlock TextWrapping="WrapWithOverflow">
+                        Selection method
+                    </TextBlock>
+                </Label>
+                <ComboBox VerticalAlignment="Top"
+                        x:Name="ComboBoxSelectionMethod"
+                        ItemsSource="{Binding Source={StaticResource SelectionMethodEnum}}"
+                        SelectedItem="{Binding Path=SelectionMethod, Mode=TwoWay}"
+                        SelectionChanged="ComboBoxSelectionMethod_SelectionChanged" />
+
+                <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
                         Percentage of individuals to cross (in best selection method)
                     </TextBlock>
@@ -162,7 +205,7 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <Label Padding="0, 6">
+                <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
                         Tournaments amount (in tournament selection method)
                     </TextBlock>
@@ -182,26 +225,17 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <Label Padding="0, 6">
+                <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
-                        Percentage of individuals to keep in Elite Strategy
+                        Crossing method
                     </TextBlock>
                 </Label>
-                <TextBox VerticalAlignment="Top"
-                        x:Name="TextBoxPercentageInElite"
-                        PreviewTextInput="OnlyPositiveIntegerInput">
-                    <TextBox.Text>
-                        <Binding Path="PercentageInElite"
-                                UpdateSourceTrigger="PropertyChanged"
-                                Mode="TwoWay">
-                            <Binding.ValidationRules>
-                                <validation:NumberRangeRule Min="0" Max="100" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
+                <ComboBox VerticalAlignment="Top"
+                        x:Name="ComboBoxCrossingMethod"
+                        ItemsSource="{Binding Source={StaticResource CrossingMethodEnum}}"
+                        SelectedItem="{Binding Path=CrossingMethod, Mode=TwoWay}" />
 
-                <Label Padding="0, 6">
+                <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
                         Crossing probability (as percentage)
                     </TextBlock>
@@ -219,7 +253,17 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <Label Padding="0, 6">
+                <Label>
+                    <TextBlock TextWrapping="WrapWithOverflow">
+                        Mutation method
+                    </TextBlock>
+                </Label>
+                <ComboBox VerticalAlignment="Top"
+                        x:Name="ComboBoxMutationMethod"
+                        ItemsSource="{Binding Source={StaticResource MutationMethodEnum}}"
+                        SelectedItem="{Binding Path=MutationMethod, Mode=TwoWay}" />
+
+                <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
                         Mutation probability (as percentage)
                     </TextBlock>
@@ -237,76 +281,86 @@
                     </TextBox.Text>
                 </TextBox>
 
-                <Label Padding="0, 6">
-                    <TextBlock TextWrapping="WrapWithOverflow">
-                        Inversion probability (as percentage)
-                    </TextBlock>
-                </Label>
-                <TextBox VerticalAlignment="Top" x:Name="TextBoxInversionProbab"
-                        PreviewTextInput="OnlyPositiveIntegerInput">
-                    <TextBox.Text>
-                        <Binding Path="InversionProbabPerc"
-                                UpdateSourceTrigger="PropertyChanged"
-                                Mode="TwoWay">
-                            <Binding.ValidationRules>
-                                <validation:NumberRangeRule Min="0" Max="100" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-
-                <Label Padding="0, 6">
-                    <TextBlock TextWrapping="WrapWithOverflow">
-                        Selection method
-                    </TextBlock>
-                </Label>
-                <ComboBox VerticalAlignment="Top"
-                        x:Name="ComboBoxSelectionMethod"
-                        ItemsSource="{Binding Source={StaticResource SelectionMethodEnum}}"
-                        SelectedItem="{Binding Path=SelectionMethod, Mode=TwoWay}"
-                        SelectionChanged="ComboBoxSelectionMethod_SelectionChanged" />
-
-                <Label Padding="0, 6">
-                    <TextBlock TextWrapping="WrapWithOverflow">
-                        Crossing method
-                    </TextBlock>
-                </Label>
-                <ComboBox VerticalAlignment="Top"
-                        x:Name="ComboBoxCrossingMethod"
-                        ItemsSource="{Binding Source={StaticResource CrossingMethodEnum}}"
-                        SelectedItem="{Binding Path=CrossingMethod, Mode=TwoWay}" />
-
-                <Label Padding="0, 6">
-                    <TextBlock TextWrapping="WrapWithOverflow">
-                        Mutation method
-                    </TextBlock>
-                </Label>
-                <ComboBox VerticalAlignment="Top"
-                        x:Name="ComboBoxMutationMethod"
-                        ItemsSource="{Binding Source={StaticResource MutationMethodEnum}}"
-                        SelectedItem="{Binding Path=MutationMethod, Mode=TwoWay}" />
-
-                <Label Padding="0, 6">
-                    <TextBlock TextWrapping="WrapWithOverflow">
-                        Optimization method
-                    </TextBlock>
-                </Label>
-                <ComboBox VerticalAlignment="Top"
-                        x:Name="ComboBoxOptimizationMethod"
-                        ItemsSource="{Binding Source={StaticResource OptimizationMethodEnum}}"
-                        SelectedItem="{Binding Path=OptimizationMethod, Mode=TwoWay}" />
-
             </StackPanel>
         </ScrollViewer>
 
-        <Button Grid.Column="0" Grid.Row="1" Margin="6" Padding="16, 2"
-                VerticalAlignment="Center" Content="Start" x:Name="ButtonStart"
-                Click="ButtonStart_Click"></Button>
+        <!--Start-->
+        <StackPanel Grid.Column="0" Grid.Row="1" Margin="6"
+                VerticalAlignment="Center">
+            <Button Padding="16, 2" Margin="0, 0, 0, 6" Content="Start"
+                    x:Name="ButtonStart" Click="ButtonStart_Click"></Button>
+            <CheckBox Padding="6, 0" HorizontalAlignment="Center"
+                    IsChecked="{Binding IsPlotLivePreview}">
+                <Label Content="Plot live preview" Padding="0" />
+            </CheckBox>
+        </StackPanel>
 
-        <oxy:Plot Grid.Column="1" Grid.RowSpan="2" Margin="8, 0" Title="">
-            <oxy:Plot.Series>
-                <oxy:LineSeries />
-            </oxy:Plot.Series>
-        </oxy:Plot>
+        <!--Plots-->
+        <ScrollViewer Grid.Column="1" Grid.RowSpan="2"
+                VerticalScrollBarVisibility="Auto">
+            <Grid MinHeight="650">
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="30" />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" TextAlignment="Center" Margin="6, 0"
+                        Text="Computation time: ms" />
+
+                <oxy:Plot Grid.Column="0" Grid.Row="1" IsLegendVisible="False"
+                        Title="Function value for best individual in given epoch"
+                        Subtitle="Translated such that function minimum = 0">
+                    <oxy:Plot.Series>
+                        <oxy:LineSeries Title="Result in given epoch" Color="Red" />
+                    </oxy:Plot.Series>
+                    <oxy:Plot.Axes>
+                        <oxy:LinearAxis Title="Epoch" Position="Bottom" Minimum="0"
+                                AbsoluteMinimum="0" />
+                    </oxy:Plot.Axes>
+                </oxy:Plot>
+
+                <oxy:Plot Grid.Column="1" Grid.Row="1" IsLegendVisible="True"
+                        Title="Function arguments for best individual in all epochs"
+                        Subtitle="Function arguments (x_{1}, x_{2}) depicted as points on plane">
+                    <oxy:Plot.Series>
+                        <oxy:ScatterSeries Title="Individuals" Color="Red" />
+                        <oxy:ScatterSeries Title="Actual minimum at" Color="Green" />
+                    </oxy:Plot.Series>
+                    <oxy:Plot.Axes>
+                        <oxy:LinearAxis Title="x_{1}" Position="Bottom" />
+                        <oxy:LinearAxis Title="x_{2}" Position="Left" />
+                    </oxy:Plot.Axes>
+                </oxy:Plot>
+
+                <oxy:Plot Grid.Column="0" Grid.Row="2" Title="Mean function value"
+                        Subtitle="Mean of all results so far for given epoch">
+                    <oxy:Plot.Series>
+                        <oxy:LineSeries />
+                    </oxy:Plot.Series>
+                    <oxy:Plot.Axes>
+                        <oxy:LinearAxis Title="Epoch" Position="Bottom" Minimum="0"
+                                AbsoluteMinimum="0" />
+                    </oxy:Plot.Axes>
+                </oxy:Plot>
+
+                <oxy:Plot Grid.Column="1" Grid.Row="2"
+                        Title="Standard deviation of function value"
+                        Subtitle="Standard deviation of all results so far for given epoch">
+                    <oxy:Plot.Series>
+                        <oxy:LineSeries />
+                    </oxy:Plot.Series>
+                    <oxy:Plot.Axes>
+                        <oxy:LinearAxis Title="Epoch" Position="Bottom" Minimum="0"
+                                AbsoluteMinimum="0" />
+                    </oxy:Plot.Axes>
+                </oxy:Plot>
+            </Grid>
+        </ScrollViewer>
+
     </Grid>
 </Window>

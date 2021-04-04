@@ -1,9 +1,10 @@
-﻿using GeneticAlgorithmSimulator.Validation;
+﻿using GeneticAlgorithmSimulator.TestFunctions;
+using GeneticAlgorithmSimulator.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;   
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,18 +23,16 @@ namespace GeneticAlgorithmSimulator
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly Dictionary<TestFunction, Func<double, double, double>> testFunctionsImpl = new()
+        public bool IsPlotLivePreview { get; set; } = true;
+
+        private static readonly Dictionary<TestFunctionEnum, ITestFunction> testFunctions = new()
         {
-            { 
-                TestFunction.SCHWEFEL, 
-                (double x1, double x2) 
-                    => 837.9658 - ( x1 * Math.Sin(Math.Sqrt(Math.Abs(x1))) + x2 * Math.Sin(Math.Sqrt(Math.Abs(x2))) )
-            }
+            { TestFunctionEnum.SCHWEFEL, new SchwefelTestFunction() }
         };
 
-        private Settings settings = new()
+        private GeneticAlgorithmSettings settings = new()
         {
-            TestFunction = TestFunction.SCHWEFEL,
+            TestFunction = TestFunctionEnum.SCHWEFEL,
             RangeStart = 0,
             RangeEnd = 10,
             NumOfBits = 40,
@@ -45,16 +44,24 @@ namespace GeneticAlgorithmSimulator
             CrossingProbabPerc = 60,
             MutationProbabPerc = 40,
             InversionProbabPerc = 10,
-            SelectionMethod = SelectionMethod.BEST,
-            CrossingMethod = CrossingMethod.ONE_POINT,
-            MutationMethod = MutationMethod.ONE_POINT,
-            OptimizationMethod = OptimizationMethod.MIN
+            SelectionMethod = SelectionMethodEnum.BEST,
+            CrossingMethod = CrossingMethodEnum.ONE_POINT,
+            MutationMethod = MutationMethodEnum.ONE_POINT
         };
+
+        private bool isWindowLoaded = false;
 
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = settings;
+            DataContext = this;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            isWindowLoaded = true;
+            StackPanelSettings.DataContext = settings;
+            DisableConditionalSelecionInputs(null);
         }
 
         private void ButtonStart_Click(object sender, RoutedEventArgs e)
@@ -64,19 +71,26 @@ namespace GeneticAlgorithmSimulator
 
         private void ComboBoxSelectionMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SelectionMethod? val = (SelectionMethod)e.AddedItems[0];
-            if (val == null)
+            if (!isWindowLoaded)
+                return;
+            DisableConditionalSelecionInputs((SelectionMethodEnum)e.AddedItems[0]);
+        }
+
+        private void DisableConditionalSelecionInputs(SelectionMethodEnum? currentValue)
+        {
+            currentValue = currentValue != null ? currentValue : (SelectionMethodEnum)ComboBoxSelectionMethod.SelectedItem;
+            if (currentValue == null)
                 return;
 
             TextBoxPercentageToCross.IsEnabled = false;
             TextBoxTournamentsAmount.IsEnabled = false;
 
-            switch (val)
+            switch (currentValue)
             {
-                case SelectionMethod.BEST:
+                case SelectionMethodEnum.BEST:
                     TextBoxPercentageToCross.IsEnabled = true;
                     break;
-                case SelectionMethod.TOURNAMENT:
+                case SelectionMethodEnum.TOURNAMENT:
                     TextBoxTournamentsAmount.IsEnabled = true;
                     break;
                 default:

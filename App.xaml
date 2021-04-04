@@ -1,9 +1,19 @@
 ﻿<Application x:Class="GeneticAlgorithmSimulator.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:GeneticAlgorithmSimulator"
-             StartupUri="src/MainWindow.xaml">
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:GeneticAlgorithmSimulator"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        StartupUri="src/MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="{x:Type oxy:Plot}">
+            <Setter Property="TitleFontSize" Value="14" />
+            <Setter Property="SubtitleFontSize" Value="13" />
+            <Setter Property="Margin" Value="6, 0" />
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="Padding" Value="0, 6" />
+        </Style>
     </Application.Resources>
+
 </Application>
+
