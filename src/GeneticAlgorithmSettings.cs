@@ -43,5 +43,27 @@ namespace GeneticAlgorithmSimulator
         public SelectionMethodEnum SelectionMethod { get; set; }
         public CrossingMethodEnum CrossingMethod { get; set; }
         public MutationMethodEnum MutationMethod { get; set; }
+
+        public static GeneticAlgorithmSettings GetDefault()
+        {
+            return new()
+            {
+                TestFunction = TestFunctionEnum.SCHWEFEL,
+                RangeStart = 0,
+                RangeEnd = 10,
+                NumOfBits = 40,
+                PopulationSize = 100,
+                EpochsAmount = 1000,
+                PercentageToCross = 10,
+                TournamentsAmount = 20,
+                PercentageInElite = 10,
+                CrossingProbabPerc = 60,
+                MutationProbabPerc = 40,
+                InversionProbabPerc = 10,
+                SelectionMethod = SelectionMethodEnum.BEST,
+                CrossingMethod = CrossingMethodEnum.ONE_POINT,
+                MutationMethod = MutationMethodEnum.ONE_POINT
+            };
+        }
     }
 }

@@ -1,8 +1,11 @@
 ﻿using GeneticAlgorithmSimulator.TestFunctions;
 using GeneticAlgorithmSimulator.Validation;
+using OxyPlot;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -21,35 +24,24 @@ namespace GeneticAlgorithmSimulator
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
         public bool IsPlotLivePreview { get; set; } = true;
 
-        private static readonly Dictionary<TestFunctionEnum, ITestFunction> testFunctions = new()
+        private double _lastComputationTime;
+        public double LastComputationTime
         {
-            { TestFunctionEnum.SCHWEFEL, new SchwefelTestFunction() }
-        };
-
-        private GeneticAlgorithmSettings settings = new()
-        {
-            TestFunction = TestFunctionEnum.SCHWEFEL,
-            RangeStart = 0,
-            RangeEnd = 10,
-            NumOfBits = 40,
-            PopulationSize = 100,
-            EpochsAmount = 1000,
-            PercentageToCross = 10,
-            TournamentsAmount = 20,
-            PercentageInElite = 10,
-            CrossingProbabPerc = 60,
-            MutationProbabPerc = 40,
-            InversionProbabPerc = 10,
-            SelectionMethod = SelectionMethodEnum.BEST,
-            CrossingMethod = CrossingMethodEnum.ONE_POINT,
-            MutationMethod = MutationMethodEnum.ONE_POINT
-        };
+            get => _lastComputationTime;
+            private set
+            {
+                _lastComputationTime = value;
+                OnPropertyChanged();
+            }
+        }
 
         private bool isWindowLoaded = false;
+        private GeneticAlgorithmSettings settings = GeneticAlgorithmSettings.GetDefault();
 
         public MainWindow()
         {
@@ -66,7 +58,16 @@ namespace GeneticAlgorithmSimulator
 
         private void ButtonStart_Click(object sender, RoutedEventArgs e)
         {
+            var manager = new GeneticAlgorithmManager(settings);
+            var resultsLinePoints = new List<DataPoint>(settings.EpochsAmount);
 
+            foreach (EpochResult result in manager.GetResults())
+            {
+                resultsLinePoints.Add(new DataPoint(result.epochNumber, result.functionValue));
+            }
+
+            PlotResultsLine.ItemsSource = resultsLinePoints;
+            LastComputationTime = manager.GetLastComputationTime();
         }
 
         private void ComboBoxSelectionMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -96,6 +97,11 @@ namespace GeneticAlgorithmSimulator
                 default:
                     break;
             }
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         private void OnlyNumberInput(object sender, TextCompositionEventArgs e)

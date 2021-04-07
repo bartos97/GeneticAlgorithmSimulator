@@ -47,7 +47,7 @@
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
 
-        <!--Settings-->        
+        <!--Settings form-->
         <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="8" x:Name="StackPanelSettings">
                 <StackPanel.DataContext>
@@ -309,27 +309,35 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" TextAlignment="Center" Margin="6, 0"
-                        Text="Computation time: ms" />
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                        VerticalAlignment="Center" TextAlignment="Center"
+                        Margin="6, 0"
+                        Text="{Binding Path=LastComputationTime, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat=Last computation time: {0:F3}ms}" />
 
-                <oxy:Plot Grid.Column="0" Grid.Row="1" IsLegendVisible="False"
+                <oxy:Plot x:Name="PlotResults" Grid.Column="0" Grid.Row="1"
+                        IsLegendVisible="False"
                         Title="Function value for best individual in given epoch"
                         Subtitle="Translated such that function minimum = 0">
                     <oxy:Plot.Series>
-                        <oxy:LineSeries Title="Result in given epoch" Color="Red" />
+                        <oxy:LineSeries x:Name="PlotResultsLine"
+                                Title="Result in given epoch" />
                     </oxy:Plot.Series>
                     <oxy:Plot.Axes>
-                        <oxy:LinearAxis Title="Epoch" Position="Bottom" Minimum="0"
-                                AbsoluteMinimum="0" />
+                        <oxy:LinearAxis Title="Epoch" Position="Bottom"
+                                Minimum="0" AbsoluteMinimum="0" />
                     </oxy:Plot.Axes>
                 </oxy:Plot>
 
                 <oxy:Plot Grid.Column="1" Grid.Row="1" IsLegendVisible="True"
                         Title="Function arguments for best individual in all epochs"
-                        Subtitle="Function arguments (x_{1}, x_{2}) depicted as points on plane">
+                        Subtitle="Function arguments (x_{1}, x_{2}) depicted as points on plane"
+                        x:Name="PlotArguments">
                     <oxy:Plot.Series>
-                        <oxy:ScatterSeries Title="Individuals" Color="Red" />
-                        <oxy:ScatterSeries Title="Actual minimum at" Color="Green" />
+                        <oxy:ScatterSeries
+                                x:Name="PlotArgumentsScatterIndividuals"
+                                Title="Individuals" Color="Red" />
+                        <oxy:ScatterSeries x:Name="PlotArgumentsScatterMin"
+                                Title="Actual minimum at" Color="Green" />
                     </oxy:Plot.Series>
                     <oxy:Plot.Axes>
                         <oxy:LinearAxis Title="x_{1}" Position="Bottom" />
@@ -337,26 +345,27 @@
                     </oxy:Plot.Axes>
                 </oxy:Plot>
 
-                <oxy:Plot Grid.Column="0" Grid.Row="2" Title="Mean function value"
+                <oxy:Plot x:Name="PlotMean" Grid.Column="0" Grid.Row="2"
+                        Title="Mean function value"
                         Subtitle="Mean of all results so far for given epoch">
                     <oxy:Plot.Series>
-                        <oxy:LineSeries />
+                        <oxy:LineSeries x:Name="PlotMeanLine" />
                     </oxy:Plot.Series>
                     <oxy:Plot.Axes>
-                        <oxy:LinearAxis Title="Epoch" Position="Bottom" Minimum="0"
-                                AbsoluteMinimum="0" />
+                        <oxy:LinearAxis Title="Epoch" Position="Bottom"
+                                Minimum="0" AbsoluteMinimum="0" />
                     </oxy:Plot.Axes>
                 </oxy:Plot>
 
-                <oxy:Plot Grid.Column="1" Grid.Row="2"
+                <oxy:Plot x:Name="PlotStdDev" Grid.Column="1" Grid.Row="2"
                         Title="Standard deviation of function value"
                         Subtitle="Standard deviation of all results so far for given epoch">
                     <oxy:Plot.Series>
-                        <oxy:LineSeries />
+                        <oxy:LineSeries x:Name="PlotStdDevLine" />
                     </oxy:Plot.Series>
                     <oxy:Plot.Axes>
-                        <oxy:LinearAxis Title="Epoch" Position="Bottom" Minimum="0"
-                                AbsoluteMinimum="0" />
+                        <oxy:LinearAxis Title="Epoch" Position="Bottom"
+                                Minimum="0" AbsoluteMinimum="0" />
                     </oxy:Plot.Axes>
                 </oxy:Plot>
             </Grid>
