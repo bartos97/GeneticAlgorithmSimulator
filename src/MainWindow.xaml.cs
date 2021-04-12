@@ -1,6 +1,7 @@
 ﻿using GeneticAlgorithmSimulator.TestFunctions;
 using GeneticAlgorithmSimulator.Validation;
 using OxyPlot;
+using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,7 +29,7 @@ namespace GeneticAlgorithmSimulator
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public bool IsPlotLivePreview { get; set; } = true;
+        public double TestFunctionActualMinVal { get; private set; }
 
         private double _lastComputationTime;
         public double LastComputationTime
@@ -56,25 +58,45 @@ namespace GeneticAlgorithmSimulator
             DisableConditionalSelecionInputs(null);
         }
 
-        private void ButtonStart_Click(object sender, RoutedEventArgs e)
-        {
-            var manager = new GeneticAlgorithmManager(settings);
-            var resultsLinePoints = new List<DataPoint>(settings.EpochsAmount);
-
-            foreach (EpochResult result in manager.GetResults())
-            {
-                resultsLinePoints.Add(new DataPoint(result.epochNumber, result.functionValue));
-            }
-
-            PlotResultsLine.ItemsSource = resultsLinePoints;
-            LastComputationTime = manager.GetLastComputationTime();
-        }
-
         private void ComboBoxSelectionMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!isWindowLoaded)
                 return;
             DisableConditionalSelecionInputs((SelectionMethodEnum)e.AddedItems[0]);
+        }
+
+
+        private async void ButtonStart_Click(object sender, RoutedEventArgs e)
+        {
+            DisableUIForWork(true);
+            await RunSimulation();
+            DisableUIForWork(false);
+        }
+
+        private void DisableUIForWork(bool isDisabled)
+        {
+            StackPanelSettings.IsEnabled = !isDisabled;
+            GridLoader.Visibility = isDisabled ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private async Task RunSimulation()
+        {
+            await Task.Run(() =>
+            {
+                var manager = new GeneticAlgorithmManager(settings);
+                var results = manager.GetResults();
+
+                Dispatcher.Invoke(() =>
+                {
+                    PlotResultsLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.functionValue));
+                    PlotArgumentsScatterIndividuals.ItemsSource = results.Select(x => new ScatterPoint(x.x1, x.x2, 2));
+                    PlotArgumentsScatterMin.ItemsSource = new[] { new ScatterPoint(manager.TestFuncMinValueArg.Item1, manager.TestFuncMinValueArg.Item2, 5) };
+                    PlotMeanLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.mean));
+                    PlotStdDevLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.stdDev));
+                    LastComputationTime = manager.GetLastComputationTime();
+                    TestFunctionActualMinVal = manager.TestFuncMinValue;
+                });
+            });
         }
 
         private void DisableConditionalSelecionInputs(SelectionMethodEnum? currentValue)

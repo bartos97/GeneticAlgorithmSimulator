@@ -8,8 +8,9 @@ namespace GeneticAlgorithmSimulator.TestFunctions
 {
     public interface ITestFunction
     {
-        double GetMinValue();
-        (double, double) GetMinValueArguments();
+        (double, double) InputDomain { get; }
+        double MinValue { get; }
+        (double, double) MinValueArguments { get; }
         double Calculate(double x1, double x2);
     }
 }

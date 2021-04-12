@@ -62,7 +62,7 @@
                         ItemsSource="{Binding Source={StaticResource TestFunctionEnum}}"
                         SelectedItem="{Binding Path=TestFunction, Mode=TwoWay}" />
 
-                <Label>
+                <!--<Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
                         Function domain range start and end (in all dimensions)
                     </TextBlock>
@@ -80,7 +80,7 @@
                             Margin="4,0,0,0" x:Name="TextBoxRangeEnd"
                             Text="{Binding Path=RangeEnd, Mode=TwoWay}"
                             PreviewTextInput="OnlyNumberInput" />
-                </Grid>
+                </Grid>-->
 
                 <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
@@ -289,10 +289,10 @@
                 VerticalAlignment="Center">
             <Button Padding="16, 2" Margin="0, 0, 0, 6" Content="Start"
                     x:Name="ButtonStart" Click="ButtonStart_Click"></Button>
-            <CheckBox Padding="6, 0" HorizontalAlignment="Center"
+            <!--<CheckBox Padding="6, 0" HorizontalAlignment="Center"
                     IsChecked="{Binding IsPlotLivePreview}">
                 <Label Content="Plot live preview" Padding="0" />
-            </CheckBox>
+            </CheckBox>-->
         </StackPanel>
 
         <!--Plots-->
@@ -316,8 +316,11 @@
 
                 <oxy:Plot x:Name="PlotResults" Grid.Column="0" Grid.Row="1"
                         IsLegendVisible="False"
-                        Title="Function value for best individual in given epoch"
-                        Subtitle="Translated such that function minimum = 0">
+                        Title="Function value for best individual in given epoch">
+                    <oxy:Plot.Annotations>
+                        <oxy:LineAnnotation Type="Horizontal"
+                                Y="{Binding Path=TestFunctionActualMinVal, Mode=OneWay}" Color="Red" StrokeThickness="1" Text="Function minimum value" TextColor="DimGray"/>
+                    </oxy:Plot.Annotations>
                     <oxy:Plot.Series>
                         <oxy:LineSeries x:Name="PlotResultsLine"
                                 Title="Result in given epoch" />
@@ -331,13 +334,14 @@
                 <oxy:Plot Grid.Column="1" Grid.Row="1" IsLegendVisible="True"
                         Title="Function arguments for best individual in all epochs"
                         Subtitle="Function arguments (x_{1}, x_{2}) depicted as points on plane"
-                        x:Name="PlotArguments">
+                        x:Name="PlotArguments" LegendOrientation="Horizontal" LegendPlacement="Outside" LegendPosition="TopCenter">
                     <oxy:Plot.Series>
                         <oxy:ScatterSeries
                                 x:Name="PlotArgumentsScatterIndividuals"
-                                Title="Individuals" Color="Red" />
+                                Title="Individuals" Color="Red" MarkerType="Circle"/>
                         <oxy:ScatterSeries x:Name="PlotArgumentsScatterMin"
-                                Title="Actual minimum at" Color="Green" />
+                                Title="Actual minimum at" Color="Green"
+                                MarkerType="Circle" />
                     </oxy:Plot.Series>
                     <oxy:Plot.Axes>
                         <oxy:LinearAxis Title="x_{1}" Position="Bottom" />
@@ -371,5 +375,11 @@
             </Grid>
         </ScrollViewer>
 
+        <Grid x:Name="GridLoader" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"
+                Background="White" Opacity="0.85" Visibility="Hidden">
+            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                    TextAlignment="Center" FontSize="20" FontWeight="SemiBold"
+                    Text="Working..." />
+        </Grid>
     </Grid>
 </Window>

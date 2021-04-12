@@ -1,6 +1,6 @@
 ﻿namespace GeneticAlgorithmSimulator
 {
-    internal struct EpochResult
+    public struct EpochResult
     {
         public int epochNumber;
         public double functionValue;

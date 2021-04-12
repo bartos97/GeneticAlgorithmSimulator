@@ -29,8 +29,8 @@ namespace GeneticAlgorithmSimulator
     public class GeneticAlgorithmSettings
     {
         public TestFunctionEnum TestFunction { get; set; }
-        public double RangeStart { get; set; }
-        public double RangeEnd { get; set; }
+        //public double RangeStart { get; set; }
+        //public double RangeEnd { get; set; }
         public int NumOfBits { get; set; }
         public int PopulationSize { get; set; }
         public int EpochsAmount { get; set; }
@@ -49,8 +49,8 @@ namespace GeneticAlgorithmSimulator
             return new()
             {
                 TestFunction = TestFunctionEnum.SCHWEFEL,
-                RangeStart = 0,
-                RangeEnd = 10,
+                //RangeStart = 0,
+                //RangeEnd = 10,
                 NumOfBits = 40,
                 PopulationSize = 100,
                 EpochsAmount = 1000,
