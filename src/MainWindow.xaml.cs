@@ -65,9 +65,10 @@ namespace GeneticAlgorithmSimulator
             DisableConditionalSelecionInputs((SelectionMethodEnum)e.AddedItems[0]);
         }
 
-
         private async void ButtonStart_Click(object sender, RoutedEventArgs e)
         {
+            if (!IsValid(StackPanelSettings))
+                return;
             DisableUIForWork(true);
             await RunSimulation();
             DisableUIForWork(false);
@@ -90,11 +91,11 @@ namespace GeneticAlgorithmSimulator
                 {
                     PlotResultsLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.functionValue));
                     PlotArgumentsScatterIndividuals.ItemsSource = results.Select(x => new ScatterPoint(x.x1, x.x2, 2));
-                    PlotArgumentsScatterMin.ItemsSource = new[] { new ScatterPoint(manager.TestFuncMinValueArg.Item1, manager.TestFuncMinValueArg.Item2, 5) };
+                    PlotArgumentsScatterMin.ItemsSource = new[] { new ScatterPoint(manager.TestFunction.MinValueArguments.Item1, manager.TestFunction.MinValueArguments.Item2, 5) };
                     PlotMeanLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.mean));
                     PlotStdDevLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.stdDev));
-                    LastComputationTime = manager.GetLastComputationTime();
-                    TestFunctionActualMinVal = manager.TestFuncMinValue;
+                    LastComputationTime = manager.LastComputationTimeInMs;
+                    TestFunctionActualMinVal = manager.TestFunction.MinValue;
                 });
             });
         }
@@ -119,6 +120,12 @@ namespace GeneticAlgorithmSimulator
                 default:
                     break;
             }
+        }
+
+        private bool IsValid(DependencyObject obj)
+        {
+            return !System.Windows.Controls.Validation.GetHasError(obj) &&
+                LogicalTreeHelper.GetChildren(obj).OfType<DependencyObject>().All(IsValid);
         }
 
         private void OnPropertyChanged([CallerMemberName] string name = null)

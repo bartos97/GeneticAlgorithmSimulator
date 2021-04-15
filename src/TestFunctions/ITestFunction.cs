@@ -12,5 +12,6 @@ namespace GeneticAlgorithmSimulator.TestFunctions
         double MinValue { get; }
         (double, double) MinValueArguments { get; }
         double Calculate(double x1, double x2);
+        double Calculate(double[] x);
     }
 }

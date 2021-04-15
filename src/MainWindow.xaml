@@ -62,26 +62,6 @@
                         ItemsSource="{Binding Source={StaticResource TestFunctionEnum}}"
                         SelectedItem="{Binding Path=TestFunction, Mode=TwoWay}" />
 
-                <!--<Label>
-                    <TextBlock TextWrapping="WrapWithOverflow">
-                        Function domain range start and end (in all dimensions)
-                    </TextBlock>
-                </Label>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBox VerticalAlignment="Top" Grid.Column="0"
-                            Margin="0,0,4,0" x:Name="TextBoxRangeStart"
-                            Text="{Binding Path=RangeStart, Mode=TwoWay}"
-                            PreviewTextInput="OnlyNumberInput" />
-                    <TextBox VerticalAlignment="Top" Grid.Column="1"
-                            Margin="4,0,0,0" x:Name="TextBoxRangeEnd"
-                            Text="{Binding Path=RangeEnd, Mode=TwoWay}"
-                            PreviewTextInput="OnlyNumberInput" />
-                </Grid>-->
-
                 <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
                         Number of bits in chromosome
@@ -94,7 +74,7 @@
                                 UpdateSourceTrigger="PropertyChanged"
                                 Mode="TwoWay">
                             <Binding.ValidationRules>
-                                <validation:NumberRangeRule Min="0" />
+                                <validation:NumberRangeRule Min="0" Max="64" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -289,10 +269,6 @@
                 VerticalAlignment="Center">
             <Button Padding="16, 2" Margin="0, 0, 0, 6" Content="Start"
                     x:Name="ButtonStart" Click="ButtonStart_Click"></Button>
-            <!--<CheckBox Padding="6, 0" HorizontalAlignment="Center"
-                    IsChecked="{Binding IsPlotLivePreview}">
-                <Label Content="Plot live preview" Padding="0" />
-            </CheckBox>-->
         </StackPanel>
 
         <!--Plots-->

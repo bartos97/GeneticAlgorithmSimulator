@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,5 +18,10 @@ namespace GeneticAlgorithmSimulator.TestFunctions
         public double Calculate(double x1, double x2)
             => 837.9658 - (x1 * Math.Sin(Math.Sqrt(Math.Abs(x1))) + x2 * Math.Sin(Math.Sqrt(Math.Abs(x2))));
 
+        public double Calculate(double[] x)
+        {
+            Debug.Assert(x.Length == 2);
+            return Calculate(x[0], x[1]);
+        }
     }
 }

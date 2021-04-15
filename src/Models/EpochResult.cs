@@ -1,4 +1,4 @@
-﻿namespace GeneticAlgorithmSimulator
+﻿namespace GeneticAlgorithmSimulator.Models
 {
     public struct EpochResult
     {
