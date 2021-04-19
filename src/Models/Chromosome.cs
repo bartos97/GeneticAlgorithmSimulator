@@ -21,9 +21,9 @@ namespace GeneticAlgorithmSimulator.Models
             Genes = sb.ToString();
         }
 
-        public long GetDecimalValue()
+        public ulong GetDecimalValue()
         {
-            return Convert.ToInt64(Genes, 2);
+            return Convert.ToUInt64(Genes, 2);
         }
     }
 }

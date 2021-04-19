@@ -19,14 +19,14 @@ namespace GeneticAlgorithmSimulator
         };
 
         private readonly GeneticAlgorithmSettings settings;
-        private readonly List<Individual> population;
         private readonly List<EpochResult> currentResults;
+        private readonly EvolutionManager evolutionManager;
 
         public GeneticAlgorithmManager(GeneticAlgorithmSettings settings)
         {
             this.settings = settings;
-            population = new List<Individual>(settings.PopulationSize);
             currentResults = new List<EpochResult>(settings.EpochsAmount);
+            evolutionManager = new EvolutionManager(settings, TestFunction);
         }
 
         public IEnumerable<EpochResult> GetResults()
@@ -34,11 +34,9 @@ namespace GeneticAlgorithmSimulator
             currentResults.Clear();
             var computationTimer = Stopwatch.StartNew();
 
-            Init();
-            currentResults.Add(GetEpochResult(0));
-            for (int i = 1; i < settings.EpochsAmount; i++)
+            for (int i = 0; i < settings.EpochsAmount; i++)
             {
-                // Do the evolution
+                evolutionManager.RunNextCycle();
                 currentResults.Add(GetEpochResult(i));
             }
 
@@ -47,17 +45,9 @@ namespace GeneticAlgorithmSimulator
             return currentResults;
         }
 
-        private void Init()
-        {
-            for (int i = 0; i < settings.PopulationSize; i++)
-            {
-                population.Add(new Individual(settings.NumOfBits, 2));
-            }
-        }
-
         private EpochResult GetEpochResult(int currentEpochNum)
         {
-            var decodedBest = GetBestIndividual().Decode(TestFunction.InputDomain.Item1, TestFunction.InputDomain.Item2);
+            var decodedBest = evolutionManager.GetBestIndividual().Decode();
             var mean = GetResultsMean();
             return new()
             {
@@ -85,25 +75,6 @@ namespace GeneticAlgorithmSimulator
             double _mean = mean == null ? GetResultsMean() : mean.Value;
             double sum = currentResults.Sum(x => Math.Pow(x.functionValue - _mean, 2));
             return Math.Sqrt(sum / currentResults.Count);
-        }
-
-        private Individual GetBestIndividual()
-        {
-            var (start, end) = TestFunction.InputDomain;
-            double min = TestFunction.Calculate(population[0].Decode(start, end));
-            var minInd = population[0];
-
-            for (int i = 1; i < population.Count; i++)
-            {
-                var val = TestFunction.Calculate(population[i].Decode(start, end));
-                if (val < min)
-                {
-                    min = val;
-                    minInd = population[i];
-                }
-            }
-
-            return minInd;
         }
     }
 }

@@ -4,35 +4,36 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GeneticAlgorithmSimulator"
+        xmlns:models="clr-namespace:GeneticAlgorithmSimulator.Models"
         xmlns:validation="clr-namespace:GeneticAlgorithmSimulator.Validation"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:oxy="http://oxyplot.org/wpf" mc:Ignorable="d" Width="1200"
         Height="700" MinWidth="1200" MinHeight="400"
         Title="Genetic algorithm simulator" Loaded="Window_Loaded">
     <Window.Resources>
-        <local:GeneticAlgorithmSettings x:Key="GeneticAlgorithmSettings" />
+        <models:GeneticAlgorithmSettings x:Key="GeneticAlgorithmSettings" />
         <ObjectDataProvider x:Key="TestFunctionEnum" MethodName="GetValues"
                 ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:TestFunctionEnum" />
+                <x:Type TypeName="models:TestFunctionEnum" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="SelectionMethodEnum" MethodName="GetValues"
                 ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:SelectionMethodEnum" />
+                <x:Type TypeName="models:SelectionMethodEnum" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="CrossingMethodEnum" MethodName="GetValues"
                 ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:CrossingMethodEnum" />
+                <x:Type TypeName="models:CrossingOperatorEnum" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="MutationMethodEnum" MethodName="GetValues"
                 ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="local:MutationMethodEnum" />
+                <x:Type TypeName="models:MutationOperatorEnum" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>

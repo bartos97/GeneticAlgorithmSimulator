@@ -1,4 +1,5 @@
-﻿using GeneticAlgorithmSimulator.TestFunctions;
+﻿using GeneticAlgorithmSimulator.Models;
+using GeneticAlgorithmSimulator.TestFunctions;
 using GeneticAlgorithmSimulator.Validation;
 using OxyPlot;
 using OxyPlot.Series;

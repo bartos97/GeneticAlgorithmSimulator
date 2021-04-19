@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GeneticAlgorithmSimulator
+namespace GeneticAlgorithmSimulator.Models
 {
     public enum TestFunctionEnum
     {
@@ -16,12 +16,12 @@ namespace GeneticAlgorithmSimulator
         BEST, ROULETTE, TOURNAMENT
     }
 
-    public enum CrossingMethodEnum
+    public enum CrossingOperatorEnum
     {
         ONE_POINT, TWO_POINT, THREE_POINT, HOMOGENEOUS
     }
 
-    public enum MutationMethodEnum
+    public enum MutationOperatorEnum
     {
         EDGE, ONE_POINT, TWO_POINT
     }
@@ -39,8 +39,8 @@ namespace GeneticAlgorithmSimulator
         public int MutationProbabPerc { get; set; }
         public int InversionProbabPerc { get; set; }
         public SelectionMethodEnum SelectionMethod { get; set; }
-        public CrossingMethodEnum CrossingMethod { get; set; }
-        public MutationMethodEnum MutationMethod { get; set; }
+        public CrossingOperatorEnum CrossingMethod { get; set; }
+        public MutationOperatorEnum MutationMethod { get; set; }
 
         public static GeneticAlgorithmSettings GetDefault()
         {
@@ -57,8 +57,8 @@ namespace GeneticAlgorithmSimulator
                 MutationProbabPerc = 40,
                 InversionProbabPerc = 10,
                 SelectionMethod = SelectionMethodEnum.BEST,
-                CrossingMethod = CrossingMethodEnum.ONE_POINT,
-                MutationMethod = MutationMethodEnum.ONE_POINT
+                CrossingMethod = CrossingOperatorEnum.ONE_POINT,
+                MutationMethod = MutationOperatorEnum.ONE_POINT
             };
         }
     }
