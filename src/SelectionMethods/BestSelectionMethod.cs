@@ -9,9 +9,19 @@ namespace GeneticAlgorithmSimulator.SelectionMethods
 {
     public class BestSelectionMethod : ISelectionMethod
     {
-        public void RemoveUnselectedIndividuals(IEnumerable<Individual> population)
+        private readonly int percentage;
+        public BestSelectionMethod(int percentageToSelect)
         {
-            throw new NotImplementedException();
+            percentage = percentageToSelect;
+        }
+
+        public void RemoveUnselectedIndividuals(ICollection<Individual> population)
+        {
+            int removeCount = population.Count - (int)(percentage / 100.0 * population.Count);
+            foreach (var item in population.Where(x => x.IsEvolving).OrderByDescending(x => x.FitnessValue).Take(removeCount))
+            {
+                population.Remove(item);
+            }
         }
     }
 }

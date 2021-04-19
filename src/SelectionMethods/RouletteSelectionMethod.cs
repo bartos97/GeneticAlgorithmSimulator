@@ -9,7 +9,7 @@ namespace GeneticAlgorithmSimulator.SelectionMethods
 {
     public class RouletteSelectionMethod : ISelectionMethod
     {
-        public void RemoveUnselectedIndividuals(IEnumerable<Individual> population)
+        public void RemoveUnselectedIndividuals(ICollection<Individual> population)
         {
             throw new NotImplementedException();
         }

@@ -36,8 +36,9 @@ namespace GeneticAlgorithmSimulator
 
             for (int i = 0; i < settings.EpochsAmount; i++)
             {
-                evolutionManager.RunNextCycle();
-                currentResults.Add(GetEpochResult(i));
+                if (!evolutionManager.RunNextCycle())
+                    break;
+                currentResults.Add(GetEpochResult(i + 1));
             }
 
             computationTimer.Stop();

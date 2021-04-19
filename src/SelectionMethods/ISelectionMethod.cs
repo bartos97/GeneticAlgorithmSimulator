@@ -9,6 +9,6 @@ namespace GeneticAlgorithmSimulator.SelectionMethods
 {
     public interface ISelectionMethod
     {
-        void RemoveUnselectedIndividuals(IEnumerable<Individual> population);
+        void RemoveUnselectedIndividuals(ICollection<Individual> population);
     }
 }

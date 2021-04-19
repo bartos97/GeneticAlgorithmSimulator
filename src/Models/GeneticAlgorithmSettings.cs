@@ -32,8 +32,8 @@ namespace GeneticAlgorithmSimulator.Models
         public int NumOfBits { get; set; }
         public int PopulationSize { get; set; }
         public int EpochsAmount { get; set; }
-        public int? PercentageToCross { get; set; }
-        public int? TournamentsAmount { get; set; }
+        public int PercentageToSelect { get; set; }
+        public int TournamentsAmount { get; set; }
         public int PercentageInElite { get; set; }
         public int CrossingProbabPerc { get; set; }
         public int MutationProbabPerc { get; set; }
@@ -50,15 +50,15 @@ namespace GeneticAlgorithmSimulator.Models
                 NumOfBits = 40,
                 PopulationSize = 100,
                 EpochsAmount = 1000,
-                PercentageToCross = 10,
+                PercentageToSelect = 60,
                 TournamentsAmount = 20,
-                PercentageInElite = 10,
+                PercentageInElite = 5,
                 CrossingProbabPerc = 60,
                 MutationProbabPerc = 40,
                 InversionProbabPerc = 10,
                 SelectionMethod = SelectionMethodEnum.BEST,
                 CrossingMethod = CrossingOperatorEnum.ONE_POINT,
-                MutationMethod = MutationOperatorEnum.ONE_POINT
+                MutationMethod = MutationOperatorEnum.EDGE
             };
         }
     }

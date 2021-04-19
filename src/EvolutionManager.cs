@@ -22,6 +22,7 @@ namespace GeneticAlgorithmSimulator
         private readonly IBinaryOperator crossoverOperator;
         private readonly IUnaryOperator mutationOperator;
         private readonly IUnaryOperator inversionOperator;
+        private bool isPopulationInitialized = false;
 
         public EvolutionManager(GeneticAlgorithmSettings settings, ITestFunction testFunction)
         {
@@ -31,7 +32,7 @@ namespace GeneticAlgorithmSimulator
 
             selectionMethod = settings.SelectionMethod switch
             {
-                SelectionMethodEnum.BEST => new BestSelectionMethod(),
+                SelectionMethodEnum.BEST => new BestSelectionMethod(settings.PercentageToSelect),
                 SelectionMethodEnum.ROULETTE => new RouletteSelectionMethod(),
                 SelectionMethodEnum.TOURNAMENT => new TournamentSelectionMethod(),
                 _ => throw new InvalidOperationException(),
@@ -62,10 +63,12 @@ namespace GeneticAlgorithmSimulator
             return population.OrderBy(x => x.FitnessValue).Take(1).ElementAt(0);
         }
 
-        public void RunNextCycle()
+        public bool RunNextCycle()
         {
-            if (!population.Any())
+            if (!isPopulationInitialized)
                 InitPopulation();
+            if (population.Count < 2)
+                return false;
 
             // select individuals to new population
             // do crossover on them...
@@ -74,11 +77,12 @@ namespace GeneticAlgorithmSimulator
             // add to new population individuals selected in elity strategy from previous population
 
             FlagIndividualsFromEliteStrategy();
-            selectionMethod.RemoveUnselectedIndividuals(population.Where(x => x.IsEvolving));
+            selectionMethod.RemoveUnselectedIndividuals(population);
             ApplyCrossovers();
             ApplyMutations();
             ApplyInversions();
             ClearEliteStrategyFlags();
+            return true;
         }
 
         private void InitPopulation()
@@ -87,6 +91,7 @@ namespace GeneticAlgorithmSimulator
             {
                 population.Add(new Individual(settings.NumOfBits, 2, testFunction));
             }
+            isPopulationInitialized = true;
         }
 
         private void FlagIndividualsFromEliteStrategy()
@@ -102,7 +107,7 @@ namespace GeneticAlgorithmSimulator
         {
             using var iter = population.Where(x => x.IsEvolving).GetEnumerator();
 
-            do
+            while (iter.MoveNext())
             {
                 if (CheckProbability(settings.CrossingProbabPerc))
                 {
@@ -110,9 +115,11 @@ namespace GeneticAlgorithmSimulator
                     if (iter.MoveNext())
                     {
                         crossoverOperator.ApplyOn(prev, iter.Current);
+                        prev.RecalculateFitnessValue();
+                        iter.Current.RecalculateFitnessValue();
                     }
                 }
-            } while (iter.MoveNext());
+            }
         }
 
         private void ApplyMutations()
@@ -122,6 +129,7 @@ namespace GeneticAlgorithmSimulator
                 if (CheckProbability(settings.MutationProbabPerc))
                 {
                     mutationOperator.ApplyOn(item);
+                    item.RecalculateFitnessValue();
                 }
             }
         }
@@ -133,6 +141,7 @@ namespace GeneticAlgorithmSimulator
                 if (CheckProbability(settings.InversionProbabPerc))
                 {
                     inversionOperator.ApplyOn(item);
+                    item.RecalculateFitnessValue();
                 }
             }
         }

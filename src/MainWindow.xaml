@@ -168,15 +168,15 @@
 
                 <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
-                        Percentage of individuals to cross (in best selection method)
+                        Percentage of individuals to select (in best selection method)
                     </TextBlock>
                 </Label>
                 <TextBox VerticalAlignment="Top"
-                        x:Name="TextBoxPercentageToCross"
+                        x:Name="TextBoxPercentageToSelect"
                         PreviewTextInput="OnlyPositiveIntegerInput"
                         IsEnabled="False">
                     <TextBox.Text>
-                        <Binding Path="PercentageToCross"
+                        <Binding Path="PercentageToSelect"
                                 UpdateSourceTrigger="PropertyChanged"
                                 Mode="TwoWay">
                             <Binding.ValidationRules>

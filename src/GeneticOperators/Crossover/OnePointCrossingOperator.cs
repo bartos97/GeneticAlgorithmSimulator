@@ -11,7 +11,11 @@ namespace GeneticAlgorithmSimulator.GeneticOperators.Crossover
     {
         public void ApplyOn(Individual individual1, Individual individual2)
         {
-            throw new NotImplementedException();
+            var copy = individual1.Chromosomes[1].Genes;
+            individual1.Chromosomes[1].Builder.Clear();
+            individual1.Chromosomes[1].Builder.Append(individual2.Chromosomes[1].Builder);
+            individual2.Chromosomes[1].Builder.Clear();
+            individual2.Chromosomes[1].Builder.Append(copy);
         }
     }
 }

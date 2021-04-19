@@ -56,7 +56,7 @@ namespace GeneticAlgorithmSimulator.Models
             return retval;
         }
 
-        private void RecalculateFitnessValue()
+        public void RecalculateFitnessValue()
         {
             FitnessValue = Math.Abs(testFunction.MinValue - testFunction.Calculate(Decode()));
         }

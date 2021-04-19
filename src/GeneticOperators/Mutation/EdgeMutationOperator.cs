@@ -11,7 +11,8 @@ namespace GeneticAlgorithmSimulator.GeneticOperators.Mutation
     {
         public void ApplyOn(Individual individual)
         {
-            throw new NotImplementedException();
+            var sb = individual.Chromosomes[^1].Builder;
+            sb[^1] = sb[^1] == '0' ? '1' : '0';
         }
     }
 }

@@ -107,13 +107,13 @@ namespace GeneticAlgorithmSimulator
             if (currentValue == null)
                 return;
 
-            TextBoxPercentageToCross.IsEnabled = false;
+            TextBoxPercentageToSelect.IsEnabled = false;
             TextBoxTournamentsAmount.IsEnabled = false;
 
             switch (currentValue)
             {
                 case SelectionMethodEnum.BEST:
-                    TextBoxPercentageToCross.IsEnabled = true;
+                    TextBoxPercentageToSelect.IsEnabled = true;
                     break;
                 case SelectionMethodEnum.TOURNAMENT:
                     TextBoxTournamentsAmount.IsEnabled = true;

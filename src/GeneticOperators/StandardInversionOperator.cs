@@ -11,7 +11,7 @@ namespace GeneticAlgorithmSimulator.GeneticOperators
     {
         public void ApplyOn(Individual individual)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
