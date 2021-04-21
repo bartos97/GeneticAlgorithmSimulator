@@ -58,7 +58,7 @@ namespace GeneticAlgorithmSimulator.Models
         {
             FitnessValue = optimizationType switch
             {
-                OptimizationTypeEnum.MIN => 1.0 / testFunction.Calculate(Decode()),
+                OptimizationTypeEnum.MIN => -testFunction.Calculate(Decode()),
                 OptimizationTypeEnum.MAX => testFunction.Calculate(Decode()),
                 _ => throw new InvalidOperationException(),
             };

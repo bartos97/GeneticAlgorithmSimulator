@@ -9,9 +9,19 @@ namespace GeneticAlgorithmSimulator.GeneticOperators.Mutation
 {
     public class OnePointMutationOperator : IUnaryOperator
     {
+        private static readonly Random rand = new();
+
         public void ApplyOn(Individual individual)
         {
-            throw new NotImplementedException();
+            foreach (var chromosome in individual.Chromosomes)
+            {
+                EdgeMutationOperator.MutateAt(chromosome, GetRandomLocus(chromosome));
+            }
+        }
+
+        public static int GetRandomLocus(Chromosome chromosome)
+        {
+            return rand.Next(0, chromosome.Builder.Length);
         }
     }
 }

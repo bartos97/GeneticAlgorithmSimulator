@@ -1,9 +1,5 @@
 ﻿using GeneticAlgorithmSimulator.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GeneticAlgorithmSimulator.GeneticOperators.Mutation
 {
@@ -11,7 +7,20 @@ namespace GeneticAlgorithmSimulator.GeneticOperators.Mutation
     {
         public void ApplyOn(Individual individual)
         {
-            throw new NotImplementedException();
+            foreach (var chromosome in individual.Chromosomes)
+            {
+                int randomLocus1, randomLocus2;
+                do
+                {
+                    randomLocus1 = OnePointMutationOperator.GetRandomLocus(chromosome);
+                    randomLocus2 = OnePointMutationOperator.GetRandomLocus(chromosome);
+                } while (randomLocus1 == randomLocus2);
+
+                EdgeMutationOperator.MutateAt(chromosome, randomLocus1);
+                EdgeMutationOperator.MutateAt(chromosome, randomLocus2);
+            }
         }
+
+        
     }
 }

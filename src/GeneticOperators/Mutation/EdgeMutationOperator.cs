@@ -13,9 +13,14 @@ namespace GeneticAlgorithmSimulator.GeneticOperators.Mutation
         {
             foreach (var chromosome in individual.Chromosomes)
             {
-                var lastGene = chromosome.Builder[^1];
-                chromosome.Builder[^1] = lastGene == '0' ? '1' : '0';
+                MutateAt(chromosome, chromosome.Builder.Length - 1);
             }
+        }
+
+        public static void MutateAt(Chromosome chromosome, int index)
+        {
+            char gene = chromosome.Builder[index];
+            chromosome.Builder[index] = gene == '0' ? '1' : '0';
         }
     }
 }
