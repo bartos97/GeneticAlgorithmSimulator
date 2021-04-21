@@ -13,15 +13,15 @@ namespace GeneticAlgorithmSimulator.TestFunctions
 
         public double MinValue => 0.0;
 
-        public (double, double) MinValueArguments => (1.0, 1.0);
+        public (double, double) MinValueArguments => (420.9687, 420.9687);
 
-        public double Calculate(double x1, double x2)
-            => 837.9658 - (x1 * Math.Sin(Math.Sqrt(Math.Abs(x1))) + x2 * Math.Sin(Math.Sqrt(Math.Abs(x2))));
+        public double Calculate(double x1, double x2) => Calculate(new[] { x1, x1 });
 
         public double Calculate(double[] x)
         {
-            Debug.Assert(x.Length == 2);
-            return Calculate(x[0], x[1]);
+            double d = x.Length;
+            double sum = x.Sum(xi => xi * Math.Sin(Math.Sqrt(Math.Abs(xi))));
+            return 418.9829 * d - sum;
         }
     }
 }

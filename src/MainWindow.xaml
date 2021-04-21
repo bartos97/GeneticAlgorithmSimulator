@@ -8,7 +8,7 @@
         xmlns:validation="clr-namespace:GeneticAlgorithmSimulator.Validation"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:oxy="http://oxyplot.org/wpf" mc:Ignorable="d" Width="1200"
-        Height="700" MinWidth="1200" MinHeight="400"
+        Height="825" MinWidth="1200" MinHeight="400"
         Title="Genetic algorithm simulator" Loaded="Window_Loaded">
     <Window.Resources>
         <models:GeneticAlgorithmSettings x:Key="GeneticAlgorithmSettings" />
@@ -16,6 +16,12 @@
                 ObjectType="{x:Type sys:Enum}">
             <ObjectDataProvider.MethodParameters>
                 <x:Type TypeName="models:TestFunctionEnum" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider x:Key="OptimizationTypeEnum" MethodName="GetValues"
+                ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:OptimizationTypeEnum" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="SelectionMethodEnum" MethodName="GetValues"
@@ -62,6 +68,15 @@
                 <ComboBox VerticalAlignment="Top" x:Name="ComboBoxTestFunction"
                         ItemsSource="{Binding Source={StaticResource TestFunctionEnum}}"
                         SelectedItem="{Binding Path=TestFunction, Mode=TwoWay}" />
+
+                <Label>
+                    <TextBlock TextWrapping="WrapWithOverflow">
+                        Function optimization type
+                    </TextBlock>
+                </Label>
+                <ComboBox VerticalAlignment="Top" x:Name="ComboBoxFunctionOptimizationType"
+                        ItemsSource="{Binding Source={StaticResource OptimizationTypeEnum}}"
+                        SelectedItem="{Binding Path=OptimizationType, Mode=TwoWay}" />
 
                 <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
@@ -168,7 +183,7 @@
 
                 <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
-                        Percentage of individuals to select (in best selection method)
+                        Percentage of individuals to select in best selection method
                     </TextBlock>
                 </Label>
                 <TextBox VerticalAlignment="Top"
@@ -188,15 +203,15 @@
 
                 <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
-                        Tournaments amount (in tournament selection method)
+                        Amount of individuals in group in tournament selection method
                     </TextBlock>
                 </Label>
                 <TextBox VerticalAlignment="Top"
-                        x:Name="TextBoxTournamentsAmount"
+                        x:Name="TextBoxNumOfIndivInGroup"
                         PreviewTextInput="OnlyPositiveIntegerInput"
                         IsEnabled="False">
                     <TextBox.Text>
-                        <Binding Path="TournamentsAmount"
+                        <Binding Path="NumOfIndividualsInGroup"
                                 UpdateSourceTrigger="PropertyChanged"
                                 Mode="TwoWay">
                             <Binding.ValidationRules>
@@ -328,7 +343,7 @@
 
                 <oxy:Plot x:Name="PlotMean" Grid.Column="0" Grid.Row="2"
                         Title="Mean function value"
-                        Subtitle="Mean of all results so far for given epoch">
+                        Subtitle="Mean function value of population in given epoch">
                     <oxy:Plot.Series>
                         <oxy:LineSeries x:Name="PlotMeanLine" />
                     </oxy:Plot.Series>
@@ -340,7 +355,7 @@
 
                 <oxy:Plot x:Name="PlotStdDev" Grid.Column="1" Grid.Row="2"
                         Title="Standard deviation of function value"
-                        Subtitle="Standard deviation of all results so far for given epoch">
+                        Subtitle="Standard deviation of function value of population in given epoch">
                     <oxy:Plot.Series>
                         <oxy:LineSeries x:Name="PlotStdDevLine" />
                     </oxy:Plot.Series>

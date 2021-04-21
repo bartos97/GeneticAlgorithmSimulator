@@ -8,7 +8,12 @@ namespace GeneticAlgorithmSimulator.Models
 {
     public enum TestFunctionEnum
     {
-        SCHWEFEL
+        SCHWEFEL, BOOTH, ACKLEY
+    }
+
+    public enum OptimizationTypeEnum
+    {
+        MIN, MAX
     }
 
     public enum SelectionMethodEnum
@@ -29,11 +34,12 @@ namespace GeneticAlgorithmSimulator.Models
     public class GeneticAlgorithmSettings
     {
         public TestFunctionEnum TestFunction { get; set; }
+        public OptimizationTypeEnum OptimizationType { get; set; }
         public int NumOfBits { get; set; }
         public int PopulationSize { get; set; }
         public int EpochsAmount { get; set; }
         public int PercentageToSelect { get; set; }
-        public int TournamentsAmount { get; set; }
+        public int NumOfIndividualsInGroup { get; set; }
         public int PercentageInElite { get; set; }
         public int CrossingProbabPerc { get; set; }
         public int MutationProbabPerc { get; set; }
@@ -47,11 +53,12 @@ namespace GeneticAlgorithmSimulator.Models
             return new()
             {
                 TestFunction = TestFunctionEnum.SCHWEFEL,
+                OptimizationType = OptimizationTypeEnum.MIN,
                 NumOfBits = 40,
                 PopulationSize = 100,
                 EpochsAmount = 1000,
                 PercentageToSelect = 60,
-                TournamentsAmount = 20,
+                NumOfIndividualsInGroup = 5,
                 PercentageInElite = 5,
                 CrossingProbabPerc = 60,
                 MutationProbabPerc = 40,

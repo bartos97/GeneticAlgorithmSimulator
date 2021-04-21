@@ -11,8 +11,11 @@ namespace GeneticAlgorithmSimulator.GeneticOperators.Mutation
     {
         public void ApplyOn(Individual individual)
         {
-            var sb = individual.Chromosomes[^1].Builder;
-            sb[^1] = sb[^1] == '0' ? '1' : '0';
+            foreach (var chromosome in individual.Chromosomes)
+            {
+                var lastGene = chromosome.Builder[^1];
+                chromosome.Builder[^1] = lastGene == '0' ? '1' : '0';
+            }
         }
     }
 }

@@ -83,6 +83,7 @@ namespace GeneticAlgorithmSimulator
 
         private async Task RunSimulation()
         {
+
             await Task.Run(() =>
             {
                 var manager = new GeneticAlgorithmManager(settings);
@@ -90,6 +91,12 @@ namespace GeneticAlgorithmSimulator
 
                 Dispatcher.Invoke(() =>
                 {
+                    foreach (var item in PlotArguments.Axes)
+                    {
+                        item.Minimum = item.AbsoluteMinimum = manager.TestFunction.InputDomain.Item1;
+                        item.Maximum = item.AbsoluteMaximum = manager.TestFunction.InputDomain.Item2;
+                    }
+
                     PlotResultsLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.functionValue));
                     PlotArgumentsScatterIndividuals.ItemsSource = results.Select(x => new ScatterPoint(x.x1, x.x2, 2));
                     PlotArgumentsScatterMin.ItemsSource = new[] { new ScatterPoint(manager.TestFunction.MinValueArguments.Item1, manager.TestFunction.MinValueArguments.Item2, 5) };
@@ -108,7 +115,7 @@ namespace GeneticAlgorithmSimulator
                 return;
 
             TextBoxPercentageToSelect.IsEnabled = false;
-            TextBoxTournamentsAmount.IsEnabled = false;
+            TextBoxNumOfIndivInGroup.IsEnabled = false;
 
             switch (currentValue)
             {
@@ -116,7 +123,7 @@ namespace GeneticAlgorithmSimulator
                     TextBoxPercentageToSelect.IsEnabled = true;
                     break;
                 case SelectionMethodEnum.TOURNAMENT:
-                    TextBoxTournamentsAmount.IsEnabled = true;
+                    TextBoxNumOfIndivInGroup.IsEnabled = true;
                     break;
                 default:
                     break;

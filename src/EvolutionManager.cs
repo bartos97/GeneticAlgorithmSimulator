@@ -17,11 +17,11 @@ namespace GeneticAlgorithmSimulator
         private static readonly Random rand = new();
         private readonly GeneticAlgorithmSettings settings;
         private readonly ITestFunction testFunction;
-        private readonly List<Individual> population;
         private readonly ISelectionMethod selectionMethod;
         private readonly IBinaryOperator crossoverOperator;
         private readonly IUnaryOperator mutationOperator;
         private readonly IUnaryOperator inversionOperator;
+        private readonly List<Individual> population;
         private bool isPopulationInitialized = false;
 
         public EvolutionManager(GeneticAlgorithmSettings settings, ITestFunction testFunction)
@@ -34,7 +34,7 @@ namespace GeneticAlgorithmSimulator
             {
                 SelectionMethodEnum.BEST => new BestSelectionMethod(settings.PercentageToSelect),
                 SelectionMethodEnum.ROULETTE => new RouletteSelectionMethod(),
-                SelectionMethodEnum.TOURNAMENT => new TournamentSelectionMethod(),
+                SelectionMethodEnum.TOURNAMENT => new TournamentSelectionMethod(settings.NumOfIndividualsInGroup),
                 _ => throw new InvalidOperationException(),
             };
 
@@ -58,10 +58,9 @@ namespace GeneticAlgorithmSimulator
             inversionOperator = new StandardInversionOperator();
         }
 
-        public Individual GetBestIndividual()
-        {
-            return population.OrderBy(x => x.FitnessValue).Take(1).ElementAt(0);
-        }
+        public Individual GetBestIndividual() => population.OrderByDescending(x => x.FitnessValue).ElementAt(0);
+
+        public IEnumerable<double> GetPopulationFunctionValues() => population.Select(x => testFunction.Calculate(x.Decode()));
 
         public bool RunNextCycle()
         {
@@ -77,10 +76,15 @@ namespace GeneticAlgorithmSimulator
             // add to new population individuals selected in elity strategy from previous population
 
             FlagIndividualsFromEliteStrategy();
-            selectionMethod.RemoveUnselectedIndividuals(population);
-            ApplyCrossovers();
-            ApplyMutations();
-            ApplyInversions();
+
+            var newPopulation = selectionMethod.GetNewPopulation(population.Where(x => !x.IsInNewPopulation));
+            ApplyCrossovers(newPopulation);
+            ApplyMutations(newPopulation);
+            ApplyInversions(newPopulation);
+            foreach (var item in newPopulation)
+                item.IsInNewPopulation = true;
+            population.RemoveAll(x => !x.IsInNewPopulation);
+
             ClearEliteStrategyFlags();
             return true;
         }
@@ -89,23 +93,33 @@ namespace GeneticAlgorithmSimulator
         {
             for (int i = 0; i < settings.PopulationSize; i++)
             {
-                population.Add(new Individual(settings.NumOfBits, 2, testFunction));
+                population.Add(new Individual(settings.NumOfBits, 2, testFunction, settings.OptimizationType));
             }
             isPopulationInitialized = true;
         }
 
         private void FlagIndividualsFromEliteStrategy()
         {
-            var eliteCount = (int)(settings.PercentageInElite / 100.0 * settings.PopulationSize);
-            foreach (var item in population.OrderBy(x => x.FitnessValue).Take(eliteCount))
+            var eliteCount = (int)(settings.PercentageInElite / 100.0 * population.Count);
+            if (eliteCount == 0)
+                eliteCount = 1;
+            foreach (var item in population.OrderByDescending(x => x.FitnessValue).Take(eliteCount))
             {
-                item.IsEvolving = false;
+                item.IsInNewPopulation = true;
             }
         }
 
-        private void ApplyCrossovers()
+        private void ClearEliteStrategyFlags()
         {
-            using var iter = population.Where(x => x.IsEvolving).GetEnumerator();
+            foreach (var item in population)
+            {
+                item.IsInNewPopulation = false;
+            }
+        }
+
+        private void ApplyCrossovers(IEnumerable<Individual> newPopulation)
+        {
+            using var iter = newPopulation.GetEnumerator();
 
             while (iter.MoveNext())
             {
@@ -122,9 +136,9 @@ namespace GeneticAlgorithmSimulator
             }
         }
 
-        private void ApplyMutations()
+        private void ApplyMutations(IEnumerable<Individual> newPopulation)
         {
-            foreach (var item in population.Where(x => x.IsEvolving))
+            foreach (var item in newPopulation)
             {
                 if (CheckProbability(settings.MutationProbabPerc))
                 {
@@ -134,23 +148,15 @@ namespace GeneticAlgorithmSimulator
             }
         }
 
-        private void ApplyInversions()
+        private void ApplyInversions(IEnumerable<Individual> newPopulation)
         {
-            foreach (var item in population.Where(x => x.IsEvolving))
+            foreach (var item in newPopulation)
             {
                 if (CheckProbability(settings.InversionProbabPerc))
                 {
                     inversionOperator.ApplyOn(item);
                     item.RecalculateFitnessValue();
                 }
-            }
-        }
-
-        private void ClearEliteStrategyFlags()
-        {
-            foreach (var item in population)
-            {
-                item.IsEvolving = true;
             }
         }
 

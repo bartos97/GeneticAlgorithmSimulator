@@ -9,6 +9,9 @@ namespace GeneticAlgorithmSimulator.SelectionMethods
 {
     public interface ISelectionMethod
     {
-        void RemoveUnselectedIndividuals(ICollection<Individual> population);
+        /// <summary>
+        /// </summary>
+        /// <returns>Enumerator to given population with individuals selected to new epoch.</returns>
+        IEnumerable<Individual> GetNewPopulation(IEnumerable<Individual> population);
     }
 }

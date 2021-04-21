@@ -15,13 +15,21 @@ namespace GeneticAlgorithmSimulator.SelectionMethods
             percentage = percentageToSelect;
         }
 
-        public void RemoveUnselectedIndividuals(ICollection<Individual> population)
+        public IEnumerable<Individual> GetNewPopulation(IEnumerable<Individual> population)
         {
-            int removeCount = population.Count - (int)(percentage / 100.0 * population.Count);
-            foreach (var item in population.Where(x => x.IsEvolving).OrderByDescending(x => x.FitnessValue).Take(removeCount))
-            {
-                population.Remove(item);
-            }
+            var orderedPopulation = population.OrderByDescending(x => x.FitnessValue);
+            int count = (int)(percentage / 100.0 * orderedPopulation.Count());
+            return orderedPopulation.Take(count);
         }
+
+        //public void RemoveUnselectedIndividuals(ICollection<Individual> mutablePopulation, IEnumerable<Individual> orderedPopulationEnumerator)
+        //{
+        //    int count = orderedPopulationEnumerator.Count();
+        //    int removeCount = count - (int)(percentage / 100.0 * count);
+        //    foreach (var item in orderedPopulationEnumerator.Reverse().Take(removeCount))
+        //    {
+        //        mutablePopulation.Remove(item);
+        //    }
+        //}
     }
 }

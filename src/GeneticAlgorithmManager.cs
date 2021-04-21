@@ -15,7 +15,9 @@ namespace GeneticAlgorithmSimulator
 
         private static readonly Dictionary<TestFunctionEnum, ITestFunction> testFunctionsImpl = new()
         {
-            { TestFunctionEnum.SCHWEFEL, new SchwefelTestFunction() }
+            { TestFunctionEnum.SCHWEFEL, new SchwefelTestFunction() },
+            { TestFunctionEnum.BOOTH, new BoothTestFunction() },
+            { TestFunctionEnum.ACKLEY, new AckleyTestFunction() }
         };
 
         private readonly GeneticAlgorithmSettings settings;
@@ -38,7 +40,7 @@ namespace GeneticAlgorithmSimulator
             {
                 if (!evolutionManager.RunNextCycle())
                     break;
-                currentResults.Add(GetEpochResult(i + 1));
+                currentResults.Add(GetEpochResult(i));
             }
 
             computationTimer.Stop();
@@ -49,7 +51,7 @@ namespace GeneticAlgorithmSimulator
         private EpochResult GetEpochResult(int currentEpochNum)
         {
             var decodedBest = evolutionManager.GetBestIndividual().Decode();
-            var mean = GetResultsMean();
+            var mean = evolutionManager.GetPopulationFunctionValues().Average();
             return new()
             {
                 epochNumber = currentEpochNum,
@@ -57,24 +59,13 @@ namespace GeneticAlgorithmSimulator
                 x1 = decodedBest[0],
                 x2 = decodedBest[1],
                 mean = mean,
-                stdDev = GetResultsStdDev(mean)
+                stdDev = GetStdDev(mean)
             };
         }
 
-        private double GetResultsMean()
+        private double GetStdDev(double mean)
         {
-            if (!currentResults.Any())
-                return default;
-            return currentResults.Average(x => x.functionValue);
-        }
-
-        private double GetResultsStdDev(double? mean = null)
-        {
-            if (!currentResults.Any())
-                return default;
-
-            double _mean = mean == null ? GetResultsMean() : mean.Value;
-            double sum = currentResults.Sum(x => Math.Pow(x.functionValue - _mean, 2));
+            double sum = evolutionManager.GetPopulationFunctionValues().Sum(x => Math.Pow(x - mean, 2));
             return Math.Sqrt(sum / currentResults.Count);
         }
     }
