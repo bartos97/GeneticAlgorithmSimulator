@@ -6,6 +6,7 @@ using GeneticAlgorithmSimulator.SelectionMethods;
 using GeneticAlgorithmSimulator.TestFunctions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,10 @@ namespace GeneticAlgorithmSimulator
         private readonly IUnaryOperator inversionOperator;
         private readonly List<Individual> population;
         private bool isPopulationInitialized = false;
+        private IEnumerable<Individual> OrderedPopulation
+        {
+            get => population.OrderByDescending(x => x.FitnessValue);
+        }
 
         public EvolutionManager(GeneticAlgorithmSettings settings, ITestFunction testFunction)
         {
@@ -43,7 +48,7 @@ namespace GeneticAlgorithmSimulator
                 CrossingOperatorEnum.ONE_POINT => new OnePointCrossingOperator(),
                 CrossingOperatorEnum.TWO_POINT => new TwoPointCrossingOperator(),
                 CrossingOperatorEnum.THREE_POINT => new ThreePointCrossingOperator(),
-                CrossingOperatorEnum.HOMOGENEOUS => new HomogeneousCrossingOperator(),
+                CrossingOperatorEnum.UNIFORM => new UniformCrossingOperator(),
                 _ => throw new InvalidOperationException(),
             };
 
@@ -58,7 +63,7 @@ namespace GeneticAlgorithmSimulator
             inversionOperator = new StandardInversionOperator();
         }
 
-        public Individual GetBestIndividual() => population.OrderByDescending(x => x.FitnessValue).ElementAt(0);
+        public Individual GetBestIndividual() => OrderedPopulation.ElementAt(0);
 
         public IEnumerable<double> GetPopulationFunctionValues() => population.Select(x => testFunction.Calculate(x.Decode()));
 
@@ -69,18 +74,13 @@ namespace GeneticAlgorithmSimulator
             if (population.Count < 2)
                 return false;
 
-            // select individuals to new population
-            // do crossover on them...
-            // ...then mutation
-            // ...then inversion
-            // add to new population individuals selected in elity strategy from previous population
-
             FlagIndividualsFromEliteStrategy();
 
             var newPopulation = selectionMethod.GetNewPopulation(population.Where(x => !x.IsInNewPopulation));
             ApplyCrossovers(newPopulation);
             ApplyMutations(newPopulation);
             ApplyInversions(newPopulation);
+
             foreach (var item in newPopulation)
                 item.IsInNewPopulation = true;
             population.RemoveAll(x => !x.IsInNewPopulation);
@@ -103,18 +103,14 @@ namespace GeneticAlgorithmSimulator
             var eliteCount = (int)(settings.PercentageInElite / 100.0 * population.Count);
             if (eliteCount == 0)
                 eliteCount = 1;
-            foreach (var item in population.OrderByDescending(x => x.FitnessValue).Take(eliteCount))
-            {
+            foreach (var item in OrderedPopulation.Take(eliteCount))
                 item.IsInNewPopulation = true;
-            }
         }
 
         private void ClearEliteStrategyFlags()
         {
             foreach (var item in population)
-            {
                 item.IsInNewPopulation = false;
-            }
         }
 
         private void ApplyCrossovers(IEnumerable<Individual> newPopulation)

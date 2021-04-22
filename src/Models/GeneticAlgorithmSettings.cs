@@ -23,7 +23,7 @@ namespace GeneticAlgorithmSimulator.Models
 
     public enum CrossingOperatorEnum
     {
-        ONE_POINT, TWO_POINT, THREE_POINT, HOMOGENEOUS
+        ONE_POINT, TWO_POINT, THREE_POINT, UNIFORM
     }
 
     public enum MutationOperatorEnum

@@ -55,7 +55,7 @@ namespace GeneticAlgorithmSimulator
             return new()
             {
                 epochNumber = currentEpochNum,
-                functionValue = TestFunction.Calculate(decodedBest[0], decodedBest[1]),
+                functionValue = TestFunction.Calculate(decodedBest),
                 x1 = decodedBest[0],
                 x2 = decodedBest[1],
                 mean = mean,
