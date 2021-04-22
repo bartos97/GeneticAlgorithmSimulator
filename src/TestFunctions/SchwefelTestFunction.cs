@@ -15,7 +15,7 @@ namespace GeneticAlgorithmSimulator.TestFunctions
 
         public (double, double) MinValueArguments => (420.9687, 420.9687);
 
-        public double Calculate(double x1, double x2) => Calculate(new[] { x1, x1 });
+        public double Calculate(double x1, double x2) => Calculate(new[] { x1, x2 });
 
         public double Calculate(double[] x)
         {
