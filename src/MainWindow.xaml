@@ -301,10 +301,15 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
-                        VerticalAlignment="Center" TextAlignment="Center"
-                        Margin="6, 0"
-                        Text="{Binding Path=LastComputationTime, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, StringFormat=Last computation time: {0:F3}ms}" />
+                <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
+                    <TextBlock VerticalAlignment="Center" TextAlignment="Center"
+                            Margin="6, 0"
+                            Text="{Binding Path=ComputationTimeMsg, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <TextBlock VerticalAlignment="Center" TextAlignment="Center"
+                            Margin="6, 0"
+                            Text="{Binding Path=ResultMsg, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
 
                 <oxy:Plot x:Name="PlotResults" Grid.Column="0" Grid.Row="1"
                         IsLegendVisible="False"

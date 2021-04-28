@@ -32,13 +32,24 @@ namespace GeneticAlgorithmSimulator
         public event PropertyChangedEventHandler PropertyChanged;
         public double TestFunctionActualMinVal { get; private set; }
 
-        private double _lastComputationTime;
-        public double LastComputationTime
+        private string _computationTimeMsg;
+        public string ComputationTimeMsg
         {
-            get => _lastComputationTime;
+            get => _computationTimeMsg;
             private set
             {
-                _lastComputationTime = value;
+                _computationTimeMsg = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _resultMsg;
+        public string ResultMsg
+        {
+            get => _resultMsg;
+            private set
+            {
+                _resultMsg = value;
                 OnPropertyChanged();
             }
         }
@@ -106,13 +117,15 @@ namespace GeneticAlgorithmSimulator
                         }
                     }
 
+                    var best = results.Last();
                     PlotResultsLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.functionValue));
                     PlotArgumentsScatterIndividuals.ItemsSource = scatterIndividuals;
                     PlotArgumentsScatterMin.ItemsSource = new[] { new ScatterPoint(manager.TestFunction.MinValueArguments.Item1, manager.TestFunction.MinValueArguments.Item2, size: 5) };
                     PlotMeanLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.mean));
                     PlotStdDevLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.stdDev));
-                    LastComputationTime = manager.LastComputationTimeInMs;
                     TestFunctionActualMinVal = manager.TestFunction.MinValue;
+                    ComputationTimeMsg = string.Format("Last computation time: {0}ms", manager.LastComputationTimeInMs);
+                    ResultMsg = string.Format("Best result: f({0:0.0000}, {1:0.0000}) = {2:0.0000}", best.x1, best.x2, best.functionValue);
                 });
             });
         }
