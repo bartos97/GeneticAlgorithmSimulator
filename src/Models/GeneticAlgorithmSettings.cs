@@ -68,5 +68,19 @@ namespace GeneticAlgorithmSimulator.Models
                 MutationMethod = MutationOperatorEnum.TWO_POINT
             };
         }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            Type itemType = typeof(GeneticAlgorithmSettings);
+            var props = itemType.GetProperties();
+
+            sb.Append(string.Join(";", props.Select(p => p.Name)));
+            sb.Append('\n');
+            sb.Append(string.Join(";", props.Select(p => p.GetValue(this))));
+            sb.Append('\n');
+
+            return sb.ToString();
+        }
     }
 }

@@ -340,7 +340,7 @@
                                 MarkerType="Circle" />
                     </oxy:Plot.Series>
                     <oxy:Plot.Axes>
-                        <oxy:LinearAxis Title="x_{1}" Position="Bottom" />
+                        <oxy:LinearAxis Title="x_{1}" Position="Bottom"/>
                         <oxy:LinearAxis Title="x_{2}" Position="Left" />
                     </oxy:Plot.Axes>
                 </oxy:Plot>

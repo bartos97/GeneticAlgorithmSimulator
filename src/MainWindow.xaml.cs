@@ -104,8 +104,8 @@ namespace GeneticAlgorithmSimulator
                 {
                     foreach (var item in PlotArguments.Axes)
                     {
-                        item.Minimum = item.AbsoluteMinimum = manager.TestFunction.InputDomain.Item1;
-                        item.Maximum = item.AbsoluteMaximum = manager.TestFunction.InputDomain.Item2;
+                        item.AbsoluteMinimum = manager.TestFunction.InputDomain.Item1;
+                        item.AbsoluteMaximum = manager.TestFunction.InputDomain.Item2;
                     }
 
                     var scatterIndividuals = new List<ScatterPoint>();
@@ -127,6 +127,8 @@ namespace GeneticAlgorithmSimulator
                     ComputationTimeMsg = string.Format("Last computation time: {0}ms", manager.LastComputationTimeInMs);
                     ResultMsg = string.Format("Best result: f({0:0.0000}, {1:0.0000}) = {2:0.0000}", best.x1, best.x2, best.functionValue);
                 });
+
+                FileHelper.SaveCollecionToCsv(results, FileHelper.CreateCsvFileNameTimestamp("results_"), settings.ToString());
             });
         }
 
