@@ -142,6 +142,7 @@ namespace GeneticAlgorithmSimulator
             switch (currentValue)
             {
                 case SelectionMethodEnum.BEST:
+                case SelectionMethodEnum.ROULETTE:
                     TextBoxPercentageToSelect.IsEnabled = true;
                     break;
                 case SelectionMethodEnum.TOURNAMENT:

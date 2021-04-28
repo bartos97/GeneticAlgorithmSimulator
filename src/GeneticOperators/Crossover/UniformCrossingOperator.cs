@@ -16,6 +16,9 @@ namespace GeneticAlgorithmSimulator.GeneticOperators.Crossover
 #if DEBUG
             OnePointCrossingOperator.AssertChromosomes(individual1, individual2);
 #endif
+            if (ReferenceEquals(individual1, individual2))
+                return;
+
             for (int i = 0; i < individual1.Chromosomes.Length; i++)
             {
                 for (int j = 0; j < individual1.Chromosomes[i].Builder.Length; j++)

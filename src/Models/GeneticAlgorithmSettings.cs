@@ -57,15 +57,15 @@ namespace GeneticAlgorithmSimulator.Models
                 NumOfBits = 40,
                 PopulationSize = 100,
                 EpochsAmount = 1000,
-                PercentageToSelect = 60,
+                PercentageToSelect = 80,
                 NumOfIndividualsInGroup = 5,
                 PercentageInElite = 5,
                 CrossingProbabPerc = 60,
                 MutationProbabPerc = 40,
                 InversionProbabPerc = 10,
-                SelectionMethod = SelectionMethodEnum.BEST,
-                CrossingMethod = CrossingOperatorEnum.ONE_POINT,
-                MutationMethod = MutationOperatorEnum.EDGE
+                SelectionMethod = SelectionMethodEnum.TOURNAMENT,
+                CrossingMethod = CrossingOperatorEnum.UNIFORM,
+                MutationMethod = MutationOperatorEnum.TWO_POINT
             };
         }
     }

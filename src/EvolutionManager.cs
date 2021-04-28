@@ -22,7 +22,7 @@ namespace GeneticAlgorithmSimulator
         private readonly IBinaryOperator crossoverOperator;
         private readonly IUnaryOperator mutationOperator;
         private readonly IUnaryOperator inversionOperator;
-        private readonly List<Individual> population;
+        private List<Individual> population;
         private bool isPopulationInitialized = false;
         private IEnumerable<Individual> OrderedPopulation
         {
@@ -38,7 +38,7 @@ namespace GeneticAlgorithmSimulator
             selectionMethod = settings.SelectionMethod switch
             {
                 SelectionMethodEnum.BEST => new BestSelectionMethod(settings.PercentageToSelect),
-                SelectionMethodEnum.ROULETTE => new RouletteSelectionMethod(),
+                SelectionMethodEnum.ROULETTE => new RouletteSelectionMethod(settings.PercentageToSelect),
                 SelectionMethodEnum.TOURNAMENT => new TournamentSelectionMethod(settings.NumOfIndividualsInGroup),
                 _ => throw new InvalidOperationException(),
             };
@@ -81,9 +81,8 @@ namespace GeneticAlgorithmSimulator
             ApplyMutations(newPopulation);
             ApplyInversions(newPopulation);
 
-            foreach (var item in newPopulation)
-                item.IsInNewPopulation = true;
-            population.RemoveAll(x => !x.IsInNewPopulation);
+            population = population.Where(x => x.IsInNewPopulation).ToList();
+            population.AddRange(newPopulation);
 
             ClearEliteStrategyFlags();
             return true;

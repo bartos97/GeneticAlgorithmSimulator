@@ -108,7 +108,7 @@
                                 UpdateSourceTrigger="PropertyChanged"
                                 Mode="TwoWay">
                             <Binding.ValidationRules>
-                                <validation:NumberRangeRule Min="0" />
+                                <validation:NumberRangeRule Min="20" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
@@ -182,9 +182,8 @@
                         SelectionChanged="ComboBoxSelectionMethod_SelectionChanged" />
 
                 <Label>
-                    <TextBlock TextWrapping="WrapWithOverflow">
-                        Percentage of individuals to select in best selection method
-                    </TextBlock>
+                    <TextBlock TextWrapping="WrapWithOverflow"
+                            Text="Percentage of individuals to select in best and roulette selection methods" />
                 </Label>
                 <TextBox VerticalAlignment="Top"
                         x:Name="TextBoxPercentageToSelect"

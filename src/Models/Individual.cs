@@ -14,7 +14,7 @@ namespace GeneticAlgorithmSimulator.Models
         public bool IsInNewPopulation { get; set; } = false;
 
         /// <summary>
-        /// The higher the better; regardles of optimization type.
+        /// Greater than 0. The higher the better; regardles of optimization type.
         /// Not necessarily actual test function value.
         /// </summary>
         public double FitnessValue { get; private set; }
@@ -56,10 +56,13 @@ namespace GeneticAlgorithmSimulator.Models
 
         public void RecalculateFitnessValue()
         {
+            double val = testFunction.Calculate(Decode());
+            if (testFunction.MinValue < 0.0)
+                val += -testFunction.MinValue;
             FitnessValue = optimizationType switch
             {
-                OptimizationTypeEnum.MIN => -testFunction.Calculate(Decode()),
-                OptimizationTypeEnum.MAX => testFunction.Calculate(Decode()),
+                OptimizationTypeEnum.MIN => 1.0 / (val == 0.0 ? double.Epsilon : val),
+                OptimizationTypeEnum.MAX => val,
                 _ => throw new InvalidOperationException(),
             };
         }
