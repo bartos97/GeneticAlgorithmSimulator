@@ -97,9 +97,18 @@ namespace GeneticAlgorithmSimulator
                         item.Maximum = item.AbsoluteMaximum = manager.TestFunction.InputDomain.Item2;
                     }
 
+                    var scatterIndividuals = new List<ScatterPoint>();
+                    foreach (var item in results)
+                    {
+                        if (scatterIndividuals.FindIndex(x => x.X == item.x1 && x.Y == item.x2) == -1)
+                        {
+                            scatterIndividuals.Add(new ScatterPoint(item.x1, item.x2, size: 3));
+                        }
+                    }
+
                     PlotResultsLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.functionValue));
-                    PlotArgumentsScatterIndividuals.ItemsSource = results.Select(x => new ScatterPoint(x.x1, x.x2, 2));
-                    PlotArgumentsScatterMin.ItemsSource = new[] { new ScatterPoint(manager.TestFunction.MinValueArguments.Item1, manager.TestFunction.MinValueArguments.Item2, 5) };
+                    PlotArgumentsScatterIndividuals.ItemsSource = scatterIndividuals;
+                    PlotArgumentsScatterMin.ItemsSource = new[] { new ScatterPoint(manager.TestFunction.MinValueArguments.Item1, manager.TestFunction.MinValueArguments.Item2, size: 5) };
                     PlotMeanLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.mean));
                     PlotStdDevLine.ItemsSource = results.Select(x => new DataPoint(x.epochNumber, x.stdDev));
                     LastComputationTime = manager.LastComputationTimeInMs;
