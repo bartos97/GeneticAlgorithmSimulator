@@ -9,9 +9,20 @@ namespace GeneticAlgorithmSimulator.GeneticOperators.Mutation
 {
     public class UniformMutationOperator : IUnaryOperator
     {
+        private static readonly Random rand = new();
+        private readonly double min;
+        private readonly double max;
+
+        public UniformMutationOperator(double min, double max)
+        {
+            this.min = min;
+            this.max = max;
+        }
+
         public void ApplyOn(Individual individual)
         {
-            throw new NotImplementedException();
+            var which = rand.Next(0, individual.Chromosomes.Length);
+            individual.Chromosomes[which] = rand.NextDouble() * (max - min) + min;
         }
     }
 }

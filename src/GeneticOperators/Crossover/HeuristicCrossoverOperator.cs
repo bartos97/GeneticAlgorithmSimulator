@@ -11,7 +11,7 @@ namespace GeneticAlgorithmSimulator.GeneticOperators.Crossover
     {
         public void ApplyOn(Individual individual1, Individual individual2)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

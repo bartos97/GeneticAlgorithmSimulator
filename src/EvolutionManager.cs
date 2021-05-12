@@ -51,7 +51,7 @@ namespace GeneticAlgorithmSimulator
 
             mutationOperator = settings.MutationMethod switch
             {
-                MutationOperatorEnum.UNIFORM => new UniformMutationOperator(),
+                MutationOperatorEnum.UNIFORM => new UniformMutationOperator(testFunction.InputDomain.Item1, testFunction.InputDomain.Item2),
                 _ => throw new InvalidOperationException(),
             };
         }
