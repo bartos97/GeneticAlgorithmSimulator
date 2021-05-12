@@ -23,19 +23,18 @@ namespace GeneticAlgorithmSimulator.Models
 
     public enum CrossingOperatorEnum
     {
-        ONE_POINT, TWO_POINT, THREE_POINT, UNIFORM
+        ARITHMETIC, HEURISTIC
     }
 
     public enum MutationOperatorEnum
     {
-        EDGE, ONE_POINT, TWO_POINT
+        UNIFORM
     }
 
     public class GeneticAlgorithmSettings
     {
         public TestFunctionEnum TestFunction { get; set; }
         public OptimizationTypeEnum OptimizationType { get; set; }
-        public int NumOfBits { get; set; }
         public int PopulationSize { get; set; }
         public int EpochsAmount { get; set; }
         public int PercentageToSelect { get; set; }
@@ -43,7 +42,6 @@ namespace GeneticAlgorithmSimulator.Models
         public int PercentageInElite { get; set; }
         public int CrossingProbabPerc { get; set; }
         public int MutationProbabPerc { get; set; }
-        public int InversionProbabPerc { get; set; }
         public SelectionMethodEnum SelectionMethod { get; set; }
         public CrossingOperatorEnum CrossingMethod { get; set; }
         public MutationOperatorEnum MutationMethod { get; set; }
@@ -54,7 +52,6 @@ namespace GeneticAlgorithmSimulator.Models
             {
                 TestFunction = TestFunctionEnum.SCHWEFEL,
                 OptimizationType = OptimizationTypeEnum.MIN,
-                NumOfBits = 40,
                 PopulationSize = 100,
                 EpochsAmount = 1000,
                 PercentageToSelect = 80,
@@ -62,10 +59,9 @@ namespace GeneticAlgorithmSimulator.Models
                 PercentageInElite = 5,
                 CrossingProbabPerc = 60,
                 MutationProbabPerc = 40,
-                InversionProbabPerc = 10,
                 SelectionMethod = SelectionMethodEnum.TOURNAMENT,
-                CrossingMethod = CrossingOperatorEnum.UNIFORM,
-                MutationMethod = MutationOperatorEnum.TWO_POINT
+                CrossingMethod = CrossingOperatorEnum.ARITHMETIC,
+                MutationMethod = MutationOperatorEnum.UNIFORM
             };
         }
 

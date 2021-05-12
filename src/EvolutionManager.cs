@@ -21,7 +21,6 @@ namespace GeneticAlgorithmSimulator
         private readonly ISelectionMethod selectionMethod;
         private readonly IBinaryOperator crossoverOperator;
         private readonly IUnaryOperator mutationOperator;
-        private readonly IUnaryOperator inversionOperator;
         private List<Individual> population;
         private bool isPopulationInitialized = false;
         private IEnumerable<Individual> OrderedPopulation
@@ -45,22 +44,16 @@ namespace GeneticAlgorithmSimulator
 
             crossoverOperator = settings.CrossingMethod switch
             {
-                CrossingOperatorEnum.ONE_POINT => new OnePointCrossingOperator(),
-                CrossingOperatorEnum.TWO_POINT => new TwoPointCrossingOperator(),
-                CrossingOperatorEnum.THREE_POINT => new ThreePointCrossingOperator(),
-                CrossingOperatorEnum.UNIFORM => new UniformCrossingOperator(),
+                CrossingOperatorEnum.ARITHMETIC => new ArithmeticCrossoverOperator(),
+                CrossingOperatorEnum.HEURISTIC => new HeuristicCrossoverOperator(),
                 _ => throw new InvalidOperationException(),
             };
 
             mutationOperator = settings.MutationMethod switch
             {
-                MutationOperatorEnum.EDGE => new EdgeMutationOperator(),
-                MutationOperatorEnum.ONE_POINT => new OnePointMutationOperator(),
-                MutationOperatorEnum.TWO_POINT => new TwoPointMutationOperator(),
+                MutationOperatorEnum.UNIFORM => new UniformMutationOperator(),
                 _ => throw new InvalidOperationException(),
             };
-
-            inversionOperator = new StandardInversionOperator();
         }
 
         public Individual GetBestIndividual() => OrderedPopulation.ElementAt(0);
@@ -79,7 +72,6 @@ namespace GeneticAlgorithmSimulator
             var newPopulation = selectionMethod.GetNewPopulation(population.Where(x => !x.IsInNewPopulation));
             ApplyCrossovers(newPopulation);
             ApplyMutations(newPopulation);
-            ApplyInversions(newPopulation);
 
             population = population.Where(x => x.IsInNewPopulation).ToList();
             population.AddRange(newPopulation);
@@ -92,7 +84,7 @@ namespace GeneticAlgorithmSimulator
         {
             for (int i = 0; i < settings.PopulationSize; i++)
             {
-                population.Add(new Individual(settings.NumOfBits, 2, testFunction, settings.OptimizationType));
+                population.Add(new Individual(2, testFunction, settings.OptimizationType));
             }
             isPopulationInitialized = true;
         }
@@ -138,18 +130,6 @@ namespace GeneticAlgorithmSimulator
                 if (CheckProbability(settings.MutationProbabPerc))
                 {
                     mutationOperator.ApplyOn(item);
-                    item.RecalculateFitnessValue();
-                }
-            }
-        }
-
-        private void ApplyInversions(IEnumerable<Individual> newPopulation)
-        {
-            foreach (var item in newPopulation)
-            {
-                if (CheckProbability(settings.InversionProbabPerc))
-                {
-                    inversionOperator.ApplyOn(item);
                     item.RecalculateFitnessValue();
                 }
             }

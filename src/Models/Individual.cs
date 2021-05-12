@@ -10,7 +10,7 @@ namespace GeneticAlgorithmSimulator.Models
 {
     public class Individual
     {
-        public Chromosome[] Chromosomes { get; init; }
+        public double[] Chromosomes { get; init; }
         public bool IsInNewPopulation { get; set; } = false;
 
         /// <summary>
@@ -19,40 +19,27 @@ namespace GeneticAlgorithmSimulator.Models
         /// </summary>
         public double FitnessValue { get; private set; }
 
-        private readonly int numOfBits;
-        private readonly int numOfVariables;
+        private static readonly Random rand = new();
         private readonly ITestFunction testFunction;
         private readonly OptimizationTypeEnum optimizationType;
 
-        public Individual(int numOfBits, int numOfVariables, ITestFunction testFunction, OptimizationTypeEnum optimizationType)
+        public Individual(int numOfVariables, ITestFunction testFunction, OptimizationTypeEnum optimizationType)
         {
-            Debug.Assert(numOfBits > 0 && numOfVariables > 0);
+            Debug.Assert(numOfVariables > 0);
 
-            this.numOfBits = numOfBits;
-            this.numOfVariables = numOfVariables;
             this.testFunction = testFunction;
             this.optimizationType = optimizationType;
 
-            Chromosomes = new Chromosome[numOfVariables];
+            Chromosomes = new double[numOfVariables];
             for (int i = 0; i < numOfVariables; i++)
             {
-                Chromosomes[i] = new Chromosome(numOfBits);
+                Chromosomes[i] = rand.NextDouble();
             }
 
             RecalculateFitnessValue();
         }
 
-        public double[] Decode()
-        {
-            var (start, end) = testFunction.InputDomain;
-            var retval = new double[numOfVariables];
-            double dx = (end - start) / (Math.Pow(2, numOfBits) - 1);
-            for (int i = 0; i < numOfVariables; i++)
-            {
-                retval[i] = start + Chromosomes[i].GetDecimalValue() * dx;
-            }
-            return retval;
-        }
+        public double[] Decode() => Chromosomes;
 
         public void RecalculateFitnessValue()
         {

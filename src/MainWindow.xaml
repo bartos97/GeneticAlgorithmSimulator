@@ -74,27 +74,10 @@
                         Function optimization type
                     </TextBlock>
                 </Label>
-                <ComboBox VerticalAlignment="Top" x:Name="ComboBoxFunctionOptimizationType"
+                <ComboBox VerticalAlignment="Top"
+                        x:Name="ComboBoxFunctionOptimizationType"
                         ItemsSource="{Binding Source={StaticResource OptimizationTypeEnum}}"
                         SelectedItem="{Binding Path=OptimizationType, Mode=TwoWay}" />
-
-                <Label>
-                    <TextBlock TextWrapping="WrapWithOverflow">
-                        Number of bits in chromosome
-                    </TextBlock>
-                </Label>
-                <TextBox VerticalAlignment="Top" x:Name="TextBoxNumOfBits"
-                        PreviewTextInput="OnlyPositiveIntegerInput">
-                    <TextBox.Text>
-                        <Binding Path="NumOfBits"
-                                UpdateSourceTrigger="PropertyChanged"
-                                Mode="TwoWay">
-                            <Binding.ValidationRules>
-                                <validation:NumberRangeRule Min="0" Max="64" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
 
                 <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
@@ -150,25 +133,6 @@
                         </Binding>
                     </TextBox.Text>
                 </TextBox>
-
-                <Label>
-                    <TextBlock TextWrapping="WrapWithOverflow">
-                        Inversion probability (as percentage)
-                    </TextBlock>
-                </Label>
-                <TextBox VerticalAlignment="Top" x:Name="TextBoxInversionProbab"
-                        PreviewTextInput="OnlyPositiveIntegerInput">
-                    <TextBox.Text>
-                        <Binding Path="InversionProbabPerc"
-                                UpdateSourceTrigger="PropertyChanged"
-                                Mode="TwoWay">
-                            <Binding.ValidationRules>
-                                <validation:NumberRangeRule Min="0" Max="100" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-
 
                 <Label>
                     <TextBlock TextWrapping="WrapWithOverflow">
