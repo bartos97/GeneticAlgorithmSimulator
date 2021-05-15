@@ -39,7 +39,7 @@ namespace GeneticAlgorithmSimulator.GeneticOperators.Crossover
                 individual1.Chromosomes[0] = x2;
                 DoCrossover(individual1, individual2);
             }
-            else Debug.Assert(false, "This should never happened");
+            //else Debug.Assert(false, "This should never happened");
 
 
         }
